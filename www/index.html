@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<title>Rock Paper Scissors Game</title>
+		<style type="text/css">
+			p, form {font-size:25px;}
+			button  {font-size:45px; width:200px; margin:25px 50px;}
+		</style>
+	</head>
+	<body>
+	<h1>Rock Paper Scissors Game</h1>
+	<br />
+	<p><i>What do you choose?</i></p>
+	<button type="button" onclick="PlayGame('R')">Rock</button></br>
+	<button type="button" onclick="PlayGame('P')">Paper</button></br>
+	<button type="button" onclick="PlayGame('S')">Scissors</button></br>
+	<span id="result">&nbsp;</span><br />
+	<span id="tally">&nbsp;</span><br />
+	<span id="log">&nbsp;</span><br />
+				
+	<script type="text/javascript">
+		var CHOICE = { // set up enumerations
+			ROCK     : {value: 1, name: "Rock", code: "R"}, 
+			PAPER    : {value: 2, name: "Paper", code: "P"}, 
+			SCISSORS : {value: 3, name: "Scissors", code: "S"}
+		};
+		var humanWins = 0;
+		var compWins = 0;
+
+		function PlayGame(play) {
+			var humanChoice;
+			var compChoice;
+	
+			if (play==='R') {
+				humanChoice = CHOICE.ROCK;
+			} else if (play==='P') {
+				humanChoice = CHOICE.PAPER;
+			} else if (play==='S') {
+				humanChoice = CHOICE.SCISSORS;
+			}
+	
+			var computer = (Math.floor( Math.random() * 3 + 0.5 ));
+				if ( computer === 1 ) {
+					compChoice = CHOICE.ROCK }
+				else { if ( computer === 2 ) {
+					compChoice = CHOICE.PAPER }
+				else { 
+					compChoice = CHOICE.SCISSORS }
+				}
+			document.getElementById('result').innerHTML="<p>You chose '" + humanChoice.name + "' and I chose '" + compChoice.name + "'</p>";
+			//document.getElementById('log').innerHTML+="H:" + humanChoice.code + " C:" + compChoice.code + "-";
+	
+			var win = humanChoice.value - compChoice.value;
+			if ( win === 0 ) { 
+				document.getElementById('result').innerHTML += "<p><b>So we draw</b></p>" } 
+			else {
+				if ( win === -2 || win === 1 ) { 
+					document.getElementById('result').innerHTML += "<p><b>So you win</b></p>"; humanWins++; }
+				else {
+					if ( win === -1 || win === 2 ) { 
+						document.getElementById('result').innerHTML += "<p><b>So I win</b></p>"; compWins++; }
+					else {}
+				}
+			}
+			document.getElementById('tally').innerHTML = "<p><i>Leaderboard:</i><br />Your wins: " + humanWins + "&nbsp;&nbsp;&nbsp;My wins: " + compWins + "</p>";
+			if ( compWins < humanWins ) { 
+				document.getElementById('tally').innerHTML += "<p>You're in the lead</p>"; } 
+			else if ( compWins > humanWins ) {
+				document.getElementById('tally').innerHTML += "<p>I'm in the lead</p>"; } 
+			else if ( compWins == humanWins ) {
+				document.getElementById('tally').innerHTML += "<p>We're running head to head</p>"; } 		
+		}
+		</script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript">
+			app.initialize();
+		</script>
+	</body>
+</html>
