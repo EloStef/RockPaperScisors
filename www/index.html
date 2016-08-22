@@ -31,7 +31,7 @@ var customControl =  L.Control.extend({
     container.style.height = '30px';
 
     container.onclick = function(){
-      onSuccess();
+	navigator.geolocation.getCurrentPosition(onSuccess, onError);
     }
 
     return container;
@@ -64,8 +64,6 @@ function onError(error) {
     alert('code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
 }
-
-navigator.geolocation.getCurrentPosition(onSuccess, onError);
 	</script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
