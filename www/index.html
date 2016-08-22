@@ -46,8 +46,9 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 			id: 'mapbox.streets'
 		}).addTo(map);
 	map.addControl(new customControl());
+
 var onSuccess = function(position) {
-	var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+    var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
     map.panTo(new L.LatLng(position.coords.latitude, position.coords.longitude));
     alert('Latitude: '          + position.coords.latitude          + '\n' +
           'Longitude: '         + position.coords.longitude         + '\n' +
@@ -64,8 +65,7 @@ function onError(error) {
           'message: ' + error.message + '\n');
 }
 
-onSuccess();
-//navigator.geolocation.getCurrentPosition(onSuccess, onError);
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
 	</script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
