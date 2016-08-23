@@ -55,6 +55,7 @@ var greenIcon = L.icon({
 var onSuccess = function(position) {
     var marker = L.marker([position.coords.latitude, position.coords.longitude], {icon: greenIcon}).addTo(map);
     map.panTo(new L.LatLng(position.coords.latitude, position.coords.longitude));
+}
     
 
 function onError(error) {
