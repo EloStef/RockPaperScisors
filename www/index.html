@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <link rel="stylesheet" href="leaflet/ol.css" type="text/css">
     <title>Basic Leaflet Mobile Map</title>
 </head>
 
@@ -16,8 +16,7 @@
         <button id="zoom-out">Zoom out</button>
         <button id="zoom-in">Zoom in</button>
     </div>
-    <link rel="stylesheet" href="http://openlayers.org/en/v3.17.1/css/ol.css" type="text/css">
-    <script src="http://openlayers.org/en/v3.17.1/build/ol.js"></script>
+    <script src="leaflet/ol.js"></script>
     <script>
       var map = new ol.Map({
         layers: [
