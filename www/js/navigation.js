@@ -17,7 +17,7 @@ function angleFromCoordinate(latLng1, latLng2) {
 }
 
 function rotateMap() {
-    if(bearingNow == bearingTarget)
+    if(bearingNow == bearingTarget || positionBefore == null)
         return;
     if(bearingNow >= 360)
         bearingNow -= 360;
@@ -38,7 +38,8 @@ function rotateMap() {
 }
 
 var onSuccess = function(pos) {
-    if ((pos.coords.latitude == position.lat && pos.coords.longitude == position.lng) || (pos.coords.accuracy > 150))
+    //// || (pos.coords.accuracy > 150)
+    if ((pos.coords.latitude == position.lat && pos.coords.longitude == position.lng))
         return;
     positionBefore = position;
     position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
@@ -70,6 +71,6 @@ var bearingTarget;
 
 //naviMarker.setOpacity(0);
 
-navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 1000 });
+navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 3000 });
 
 var intervalVariable = window.setInterval(rotateMap, 30);
