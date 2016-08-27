@@ -12,27 +12,17 @@
 
 <body>
     <div class="app">
-        <div id="map" class="map" tabindex="0"></div>
-        <button id="zoom-out">Zoom out</button>
-        <button id="zoom-in">Zoom in</button>
+        <div id="map" class="map">
+            <div style="padding-left: 10px;padding-right: 10px; position:absolute; bottom:-10px; width:100%;">
+                <input type="button" id="Btn1" value="Btn1" onclick="" class="btnStyle span3" />
+                <input type="button" id="Btn2" value="Btn2" onclick="SaveRoutes()" class="btnStyle span3" />
+                <input type="button" id="Btn3" value="Btn3" onclick="editRoutes()" class="btnStyle span3" />
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="spec/lib/leaflet1.0.0/leaflet.js"></script>
-    <script>
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        osm = L.tileLayer(osmUrl, {
-            maxZoom: 18,
-            attribution: osmAttrib
-        });
-
-    var map = L.map('map', {
-            rotate: true
-        })
-        .setView([55, 10], 4)
-        .addLayer(osm);
-
-    map.setBearing(15);
-    </script>
+    <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript" src="js/navigation.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">

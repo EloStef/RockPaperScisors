@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="spec/lib/leaflet1.0.0/leaflet.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Basic Leaflet Mobile Map</title>
+</head>
+
+<body>
+    <div class="app">
+        <div id="map" class="map" tabindex="0"></div>
+        <button id="zoom-out">Zoom out</button>
+        <button id="zoom-in">Zoom in</button>
+    </div>
+    <script type="text/javascript" src="spec/lib/leaflet1.0.0/leaflet.js"></script>
+    <script>
+    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        osm = L.tileLayer(osmUrl, {
+            maxZoom: 18,
+            attribution: osmAttrib
+        });
+
+    var map = L.map('map', {
+            rotate: true
+        })
+        .setView([55, 10], 4)
+        .addLayer(osm);
+
+    //map.setBearing(15);
+
+    var onSuccess = function(position) {
+        alert('Latitude: ' + position.coords.latitude + '\n' +
+            'Longitude: ' + position.coords.longitude + '\n' +
+            'Altitude: ' + position.coords.altitude + '\n' + 'Accuracy: ' + position.coords.accuracy + '\n' + 'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' + 'Heading: ' + position.coords.heading + '\n' +
+            'Speed: ' + position.coords.speed + '\n' +
+            'Timestamp: ' + position.timestamp + '\n');
+    };
+
+    // onError Callback receives a PositionError object
+
+    function onError(error) {
+        alert('code: ' + error.code + '\n' +
+            'message: ' + error.message + '\n');
+    }
+
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError,{timeout:10000});
+
+    //map.setView([51.505, -0.09], 13);
+
+    //navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    </script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+    app.initialize();
+    </script>
+</body>
+
+</html>
