@@ -34,7 +34,7 @@ function rotateMap() {
         bearingNow += 1;
         map.setBearing(bearingNow);
     }
-    //console.log(dist + " " + bearingNow + "->" + bearingTarget);
+    console.log(dist + " " + bearingNow + "->" + bearingTarget);
 }
 
 var onSuccess = function(pos) {
@@ -47,9 +47,11 @@ var onSuccess = function(pos) {
     position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
     map.panTo(position);
     naviMarker.setLatLng(position);
-    bearingTarget = angleFromCoordinate(position, positionBefore) + 90;
+    bearingTarget = 180 - angleFromCoordinate(position, positionBefore);
     if (bearingTarget >= 360)
         bearingTarget -= 360;
+    if (bearingTarget < 0)
+        bearingTarget += 360;
     /*alert('Latitude: ' + position.coords.latitude + '\n' +
         'Longitude: ' + position.coords.longitude + '\n' +
         'Altitude: ' + position.coords.altitude + '\n' + 'Accuracy: ' + position.coords.accuracy + '\n' + 'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' + 'Heading: ' + position.coords.heading + '\n' +
