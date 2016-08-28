@@ -47,7 +47,7 @@ var onSuccess = function(pos) {
     position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
     map.panTo(position);
     naviMarker.setLatLng(position);
-    bearingTarget = angleFromCoordinate(position, positionBefore) + 180;
+    bearingTarget = angleFromCoordinate(position, positionBefore) + 90;
     if (bearingTarget >= 360)
         bearingTarget -= 360;
     /*alert('Latitude: ' + position.coords.latitude + '\n' +
