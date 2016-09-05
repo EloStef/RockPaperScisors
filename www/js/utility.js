@@ -1,4 +1,4 @@
-var getJSON = function(url, callback) {
+/*var getJSON = function(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open("get", url, true);
     xhr.responseType = "json";
@@ -13,4 +13,11 @@ var getJSON = function(url, callback) {
         }
     };
     xhr.send();
-};
+};*/
+
+var getJSON = function(url, callback){
+    $.getJSON(url, function(data)
+    {
+            callback(data);   
+    });
+}

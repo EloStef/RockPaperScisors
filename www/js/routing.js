@@ -29,41 +29,30 @@ function newPoint(click) {
         L.marker(click.latlng, { icon: routingMark }).addTo(map);
     } else {
         getJSON(getGraphhopperUrl(graphhopperPointString(lastpoint), graphhopperPointString(click.latlng)),
-            function(err, data) {
-                if (err != null) {
-                    alert("Something went wrong: " + err);
-                } else {
-                    L.geoJson(data.paths[0].points, {
-                        style: lineStyle
-                    }).addTo(map);
-                    lastpoint = click.latlng;
-                    saveFormat.coordinates.push(data.paths[0].points);
-                    L.marker(click.latlng, { icon: routingMark }).addTo(map);
-                    alert("Something");
-                }
+            function(data) {
+                L.geoJson(data.paths[0].points, {
+                    style: lineStyle
+                }).addTo(map);
+                lastpoint = click.latlng;
+                saveFormat.coordinates.push(data.paths[0].points);
+                L.marker(click.latlng, { icon: routingMark }).addTo(map);
             });
-        alert("poelsie");
     }
 }
 
 map.on('click', newPoint);
 
-function save(){
-	localStorage.setItem(saveFormat.name ,JSON.stringify(saveFormat));
-	window.location="index.html";
+function save() {
+    localStorage.setItem(saveFormat.name, JSON.stringify(saveFormat));
+    window.location = "index.html";
 }
 
 getJSON("https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false",
-            function(err, data) {
-                if (err != null) {
-                    alert("Something went wrong: " + err);
-                } else {
-                    L.geoJson(data.paths[0].points, {
-                        style: lineStyle
-                    }).addTo(map);
-                    lastpoint = click.latlng;
-                    saveFormat.coordinates.push(data.paths[0].points);
-                    L.marker(click.latlng, { icon: routingMark }).addTo(map);
-                    alert("Something");
-                }
-            });
+    function(data) {
+        L.geoJson(data.paths[0].points, {
+            style: lineStyle
+        }).addTo(map);
+        lastpoint = click.latlng;
+        saveFormat.coordinates.push(data.paths[0].points);
+        L.marker(click.latlng, { icon: routingMark }).addTo(map);
+    });
