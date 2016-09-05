@@ -39,8 +39,10 @@ function newPoint(click) {
                     lastpoint = click.latlng;
                     saveFormat.coordinates.push(data.paths[0].points);
                     L.marker(click.latlng, { icon: routingMark }).addTo(map);
+                    alert("Something");
                 }
             });
+        alert("poelsie");
     }
 }
 

@@ -8,6 +8,7 @@ var getJSON = function(url, callback) {
             alert(xhr.response);
             callback(null, xhr.response);
         } else {
+            alert(status);
             callback(status);
         }
     };
