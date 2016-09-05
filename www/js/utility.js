@@ -5,6 +5,7 @@ var getJSON = function(url, callback) {
     xhr.onload = function() {
         var status = xhr.status;
         if (status == 200) {
+            alert(xhr.response);
             callback(null, xhr.response);
         } else {
             callback(status);
