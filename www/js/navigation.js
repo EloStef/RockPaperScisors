@@ -1,7 +1,3 @@
-var navigationIcon = L.icon({
-    iconUrl: 'img/navigationIcon.png'
-});
-
 function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
 
@@ -16,47 +12,53 @@ function angleFromCoordinate(latLng1, latLng2) {
     return Math.floor(brng);
 }
 
+function MoveDegrees(degrees) {
+    while (degrees < 0 || degrees >= 360) {
+        degrees = (degrees < 0) ? (degrees + 360) : degrees;
+        degrees = (degrees >= 360) ? (degrees - 360) : degrees;
+    }
+    return degrees;
+}
+
 function rotateMap() {
-    if(bearingNow == bearingTarget || positionBefore == null)
+    if (bearingNow == bearingTarget || positionBefore == null)
         return;
-    if(bearingNow >= 360)
+    if (bearingNow >= 360)
         bearingNow -= 360;
-    if(bearingNow < 0)
+    if (bearingNow < 0)
         bearingNow += 360;
     var dist = bearingTarget - bearingNow;
     if (dist < 0)
-            dist += 360;
+        dist += 360;
     if (dist > 180) {
         bearingNow -= 1;
         map.setBearing(bearingNow);
-    }
-    else {
+    } else {
         bearingNow += 1;
         map.setBearing(bearingNow);
     }
-    console.log(dist + " " + bearingNow + "->" + bearingTarget);
+    //console.log(dist + " " + bearingNow + "->" + bearingTarget);
 }
 
 var onSuccess = function(pos) {
     //// || (pos.coords.accuracy > 150)
-    document.getElementById("speedField").value = "Speed: " + pos.coords.speed;
+    document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
     document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
     if ((pos.coords.latitude == position.lat && pos.coords.longitude == position.lng))
         return;
     positionBefore = position;
     position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
     map.panTo(position);
-    naviMarker.setLatLng(position);
+    //naviMarker.setLatLng(position);
+    //naviMarker._currentLine[1] = new L.latLng(position.lat, position.lng);
+    naviMarker.moveTo([position.lat, position.lng], 100);
+    naviMarker.start();
+
     bearingTarget = 180 - angleFromCoordinate(position, positionBefore);
     if (bearingTarget >= 360)
         bearingTarget -= 360;
     if (bearingTarget < 0)
         bearingTarget += 360;
-    /*alert('Latitude: ' + position.coords.latitude + '\n' +
-        'Longitude: ' + position.coords.longitude + '\n' +
-        'Altitude: ' + position.coords.altitude + '\n' + 'Accuracy: ' + position.coords.accuracy + '\n' + 'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' + 'Heading: ' + position.coords.heading + '\n' +
-        'Speed: ' + position.coords.speed + '\n' +
-        'Timestamp: ' + position.timestamp + '\n');*/
 };
 
 function onError(error) {
@@ -64,9 +66,17 @@ function onError(error) {
         'message: ' + error.message + '\n');
 }
 
-var naviMarker = L.marker([0, 0], {
-    icon: navigationIcon
-}).addTo(map);
+var parisKievLL = [
+    [0, 0],
+    [10, 10]
+];
+
+var navigationIcon = L.icon({
+    iconUrl: 'img/navigationIcon.png',
+    iconAnchor: [10, 10]
+});
+
+var naviMarker = L.Marker.movingMarker(parisKievLL, [10000], { autostart: true, icon: navigationIcon }).addTo(map);
 
 var position = new L.latLng(0, 0);
 var positionBefore;
@@ -74,27 +84,25 @@ var bearingNow = 0;
 var bearingTarget;
 
 //naviMarker.setOpacity(0);
-var customControl =  L.Control.extend({
+var customControl = L.Control.extend({
 
-  options: {
-    position: 'topright'
-  },
+    options: {
+        position: 'topright'
+    },
 
-  onAdd: function (map) {
-    var container = L.DomUtil.create('input', 'leaflet-bar leaflet-control leaflet-control-custom');
+    onAdd: function(map) {
+        var container = L.DomUtil.create('input', 'leaflet-bar leaflet-control'); // leaflet-control-custom
 
-    //container.style.backgroundColor = "white";
-    //container.style.filter = "alpha(opacity=50)";
-    container.style.background = "rgba(100,100,100,0.4)";
-    container.style.backgroundSize = "90px 20px";
-    container.style.width = '90px';
-    container.style.height = '20px';
-    container.style.border = '0px';
-    container.disabled = "true";
-    container.value = value;
-    container.id = id;
-    return container;
-  }
+        container.style.background = "rgba(100,100,100,0.4)";
+        container.style.backgroundSize = "90px 20px";
+        container.style.width = '90px';
+        container.style.height = '20px';
+        container.style.border = '0px';
+        container.disabled = "true";
+        container.value = value;
+        container.id = id;
+        return container;
+    }
 });
 
 map.addControl(new customControl(id = "speedField", value = "Speed: 0"));
@@ -103,3 +111,44 @@ map.addControl(new customControl(id = "accuracyField", value = "Accuracy: 0"));
 navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 3000, enableHighAccuracy: true });
 
 var intervalVariable = window.setInterval(rotateMap, 30);
+
+var route = JSON.parse(localStorage.getItem("test"));
+
+var lineStyle = {
+    "color": "#ff7800",
+    "weight": 4,
+    "opacity": 0.65
+};
+
+for (i = 0; i < route.coordinates.length; i++) {
+    L.geoJson(route.coordinates[i], {
+        style: lineStyle
+    }).addTo(map);
+}
+
+var returnButton = L.Control.extend({
+
+    options: {
+        position: 'bottomleft'
+    },
+
+    onAdd: function (map) {
+    var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+    container.style.backgroundColor = 'white';     
+    container.style.backgroundImage = "url(img/returnButton.png)";
+    container.style.backgroundSize = "25px 25px";
+    container.style.width = '25px';
+    container.style.height = '25px';
+
+    container.onclick = function(){
+      window.location="index.html";
+    }
+
+    return container;
+  }
+
+});
+
+
+map.addControl(new returnButton());
