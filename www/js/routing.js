@@ -1,58 +1,58 @@
-var graphhopperPrefix = "https://graphhopper.com/api/1/route?";
-var graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
+var RoutingSystem = function() {
+    this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
+    this.graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
 
-var lastpoint;
-var saveFormat = { name: "test", coordinates: [] };
+    this.lineStyle = {
+        "color": "#ff7800",
+        "weight": 4,
+        "opacity": 0.65
+    };
 
-var routingMark = L.icon({
-    iconUrl: 'img/routingMark.png',
-    iconAnchor: [6, 6],
-});
+    this.routingMark = L.icon({
+        iconUrl: 'img/routingMark.png',
+        iconAnchor: [6, 6]
+    });
 
-var lineStyle = {
-    "color": "#ff7800",
-    "weight": 4,
-    "opacity": 0.65
+    this.saveFormat = { name: "test", coordinates: [] };
+
+    this.lastpoint;
 };
 
-function graphhopperPointString(latlng) {
+RoutingSystem.prototype.graphhopperPointString = function(latlng) {
     return "point=" + latlng.lat + "," + latlng.lng;
 }
 
-function getGraphhopperUrl(point1, point2) {
-    return graphhopperPrefix + point1 + '&' + point2 + graphhopperSuffix;
+RoutingSystem.prototype.getGraphhopperUrl = function(point1, point2) {
+    return this.graphhopperPrefix + point1 + '&' + point2 + this.graphhopperSuffix;
 }
 
-function newPoint(click) {
-    if (lastpoint == null) {
-        lastpoint = click.latlng;
-        L.marker(click.latlng, { icon: routingMark }).addTo(map);
+RoutingSystem.prototype.createNewRoute = function(clickEvent) {
+    if (this.lastpoint == null) {
+        this.lastpoint = clickEvent.latlng;
+        L.marker(clickEvent.latlng, { icon: this.routingMark }).addTo(map);
     } else {
-        getJSON(getGraphhopperUrl(graphhopperPointString(lastpoint), graphhopperPointString(click.latlng)),
+        var self = this;
+        $.getJSON(
+            this.getGraphhopperUrl(this.graphhopperPointString(this.lastpoint),
+                this.graphhopperPointString(clickEvent.latlng)),
             function(data) {
                 L.geoJson(data.paths[0].points, {
-                    style: lineStyle
+                    style: this.lineStyle
                 }).addTo(map);
-                lastpoint = click.latlng;
-                saveFormat.coordinates.push(data.paths[0].points);
-                L.marker(click.latlng, { icon: routingMark }).addTo(map);
-            });
+                self.lastpoint = clickEvent.latlng;
+                self.saveFormat.coordinates.push(data.paths[0].points);
+                L.marker(clickEvent.latlng, { icon: self.routingMark }).addTo(map);
+            }
+        );
     }
 }
 
-map.on('click', newPoint);
-
-function save() {
-    localStorage.setItem(saveFormat.name, JSON.stringify(saveFormat));
+function saveNewRoute() {
+    localStorage.setItem(routingSystem.saveFormat.name, JSON.stringify(routingSystem.saveFormat));
     window.location = "index.html";
 }
 
-getJSON("https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false",
-    function(data) {
-        L.geoJson(data.paths[0].points, {
-            style: lineStyle
-        }).addTo(map);
-        lastpoint = click.latlng;
-        saveFormat.coordinates.push(data.paths[0].points);
-        L.marker(click.latlng, { icon: routingMark }).addTo(map);
-    });
+var routingSystem = new RoutingSystem();
+map.on('click', function(clickEvent) {
+    routingSystem.createNewRoute(clickEvent);
+});

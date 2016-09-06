@@ -14,8 +14,10 @@ function angleFromCoordinate(latLng1, latLng2) {
 
 function MoveDegrees(degrees) {
     while (degrees < 0 || degrees >= 360) {
-        degrees = (degrees < 0) ? (degrees + 360) : degrees;
-        degrees = (degrees >= 360) ? (degrees - 360) : degrees;
+        if(degrees < 0) 
+            degrees = degrees + 360;
+        if(degrees >= 360)
+            degrees = degrees - 360;
     }
     return degrees;
 }
@@ -23,10 +25,7 @@ function MoveDegrees(degrees) {
 function rotateMap() {
     if (bearingNow == bearingTarget || positionBefore == null)
         return;
-    if (bearingNow >= 360)
-        bearingNow -= 360;
-    if (bearingNow < 0)
-        bearingNow += 360;
+    bearingNow = MoveDegrees(bearingNow);
     var dist = bearingTarget - bearingNow;
     if (dist < 0)
         dist += 360;
@@ -37,28 +36,23 @@ function rotateMap() {
         bearingNow += 1;
         map.setBearing(bearingNow);
     }
-    //console.log(dist + " " + bearingNow + "->" + bearingTarget);
 }
 
+var rotateby = 0;
+
 var onSuccess = function(pos) {
-    //// || (pos.coords.accuracy > 150)
     document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
     document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
     if ((pos.coords.latitude == position.lat && pos.coords.longitude == position.lng))
         return;
     positionBefore = position;
     position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
-    map.panTo(position);
-    //naviMarker.setLatLng(position);
-    //naviMarker._currentLine[1] = new L.latLng(position.lat, position.lng);
-    naviMarker.moveTo([position.lat, position.lng], 100);
+    naviMarker.moveTo([position.lat, position.lng], 2100);
     naviMarker.start();
 
     bearingTarget = 180 - angleFromCoordinate(position, positionBefore);
-    if (bearingTarget >= 360)
-        bearingTarget -= 360;
-    if (bearingTarget < 0)
-        bearingTarget += 360;
+    bearingTarget = MoveDegrees(bearingTarget);
+    bearingNow = MoveDegrees(bearingNow);
 };
 
 function onError(error) {
@@ -80,8 +74,8 @@ var naviMarker = L.Marker.movingMarker(parisKievLL, [10000], { autostart: true, 
 
 var position = new L.latLng(0, 0);
 var positionBefore;
-var bearingNow = 0;
-var bearingTarget;
+var bearingNow = 0.0;
+var bearingTarget = 0.0;
 
 //naviMarker.setOpacity(0);
 var customControl = L.Control.extend({
@@ -108,9 +102,15 @@ var customControl = L.Control.extend({
 map.addControl(new customControl(id = "speedField", value = "Speed: 0"));
 map.addControl(new customControl(id = "accuracyField", value = "Accuracy: 0"));
 
-navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 3000, enableHighAccuracy: true });
+navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 2000, enableHighAccuracy: true });
 
 var intervalVariable = window.setInterval(rotateMap, 30);
+
+function setMapPos() {
+    if (naviMarker.isRunning())
+        map.panTo(naviMarker._latlng);
+}
+var interval = window.setInterval(setMapPos, 50);
 
 var route = JSON.parse(localStorage.getItem("test"));
 
@@ -132,23 +132,25 @@ var returnButton = L.Control.extend({
         position: 'bottomleft'
     },
 
-    onAdd: function (map) {
-    var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+    onAdd: function(map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
 
-    container.style.backgroundColor = 'white';     
-    container.style.backgroundImage = "url(img/returnButton.png)";
-    container.style.backgroundSize = "25px 25px";
-    container.style.width = '25px';
-    container.style.height = '25px';
+        container.style.backgroundColor = 'white';
+        container.style.backgroundImage = "url(img/returnButton.png)";
+        container.style.backgroundSize = "25px 25px";
+        container.style.width = '25px';
+        container.style.height = '25px';
 
-    container.onclick = function(){
-      window.location="index.html";
+        container.onclick = function() {
+            window.location = "index.html";
+        }
+        return container;
     }
-
-    return container;
-  }
-
 });
 
-
 map.addControl(new returnButton());
+
+var st = 0;
+var st2 = 0;
+//naviMarker.on('start', function(){console.log("start: " + Date.now()); st = Date.now();});
+//naviMarker.on('end', function(){console.log("end: " + Date.now() + " " + (st - Date.now()));});
