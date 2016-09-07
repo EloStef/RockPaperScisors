@@ -2,17 +2,6 @@ var RoutingSystem = function() {
     this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
     this.graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
 
-    this.lineStyle = {
-        "color": "#ff7800",
-        "weight": 4,
-        "opacity": 0.65
-    };
-
-    this.routingMark = L.icon({
-        iconUrl: 'img/routingMark.png',
-        iconAnchor: [6, 6]
-    });
-
     this.saveFormat = { name: "test", coordinates: [] };
 
     this.lastpoint;
@@ -29,7 +18,7 @@ RoutingSystem.prototype.getGraphhopperUrl = function(point1, point2) {
 RoutingSystem.prototype.createNewRoute = function(clickEvent) {
     if (this.lastpoint == null) {
         this.lastpoint = clickEvent.latlng;
-        L.marker(clickEvent.latlng, { icon: this.routingMark }).addTo(map);
+        L.marker(clickEvent.latlng, { icon: routingMarkIcon }).addTo(map);
     } else {
         var self = this;
         $.getJSON(
@@ -37,11 +26,11 @@ RoutingSystem.prototype.createNewRoute = function(clickEvent) {
                 this.graphhopperPointString(clickEvent.latlng)),
             function(data) {
                 L.geoJson(data.paths[0].points, {
-                    style: this.lineStyle
+                    style: lineStyle
                 }).addTo(map);
                 self.lastpoint = clickEvent.latlng;
                 self.saveFormat.coordinates.push(data.paths[0].points);
-                L.marker(clickEvent.latlng, { icon: self.routingMark }).addTo(map);
+                L.marker(clickEvent.latlng, { icon: routingMarkIcon }).addTo(map);
             }
         );
     }
