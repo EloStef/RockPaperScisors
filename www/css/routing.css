@@ -1,13 +1,14 @@
 body {
     padding: 0;
     margin: 0;
+    background-color: #008CBA;
 }
 
 html, body, {
 	height: 100%;
 }
 
-#map {
+.map {
     height: 95%;
 }
 
@@ -23,8 +24,14 @@ button {
     width: 100%;
     cursor: pointer;
     height: 5%;
+
+    margin: -1px 0px -1px 0px;
 }
 
 button:hover, button:active {
     background-color: #87CEFA;
 }
+
+button:focus {
+    outline:0;
+};

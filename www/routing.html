@@ -12,19 +12,30 @@
 
 <body>
     <div class="app">
+        <!--<button type="button" onclick="routingSystem.undo()">UNDO</button>
+        <button type="button" onclick="routingSystem.redo()">REDO</button>-->
         <div id="map" class="map"></div>
-        <button type="button" onclick="saveNewRoute()">Save</button>
+        <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
+        <div>
+            <div class="nav">
+                <button type="button" onclick="routingSystem.undo()">Undo</button>
+                <button type="button" onclick="routingSystem.redo()">Redo</button>
+                <button type="button" onclick="saveNewRoute()">Save</button>
+            </div>
+        </div>
+        <button class="menu" type="button" onclick="saveNewRoute()">Menu</button>
     </div>
     <script type="text/javascript" src="lib/leaflet1.0.0/leaflet.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="js/mapElementsStyle.js"></script>
     <script type="text/javascript" src="js/map.js"></script>
-    <script type="text/javascript" src="js/utility.js"></script>
+    <script type="text/javascript" src="js/careTaker.js"></script>
+    <script type="text/javascript" src="js/route.js"></script>
     <script type="text/javascript" src="js/routing.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
-        app.initialize();
+    app.initialize();
     </script>
 </body>
 
