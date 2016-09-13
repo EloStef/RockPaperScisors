@@ -121,27 +121,12 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
     },
     errorGeoLocate: function(error) {
-        alert('code: ' + error.code + '\n' +
+        if(typeof cordova.plugins.settings.openSetting != undefined)
+            cordova.plugins.settings.openSetting("settings", function(){console.log("opened nfc settings")},function(){alert('error: ' + error.code + '\n' +
+            'message: ' + error.message + '\n');});
+        alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
     }
 }
 
 var navigationSystem = new NavigationSystem();
-
-/*function checkConnection() {
-    console.log("eldo");
-    var networkState = navigator.network.connection.type;
-
-    var states = {};
-    states[Connection.UNKNOWN] = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI] = 'WiFi connection';
-    states[Connection.CELL_2G] = 'Cell 2G connection';
-    states[Connection.CELL_3G] = 'Cell 3G connection';
-    states[Connection.CELL_4G] = 'Cell 4G connection';
-    states[Connection.NONE] = 'No network connection';
-
-    alert('Connection type: ' + states[networkState]);
-}
-
-checkConnection();*/
