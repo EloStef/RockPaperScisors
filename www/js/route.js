@@ -32,7 +32,6 @@ Route.prototype = {
     },
     dehydrate: function(memento) {
         var m = JSON.parse(memento);
-        console.log(m);
         this.name = m.name;
         this.points = m.points;
         this.paths = m.paths;
