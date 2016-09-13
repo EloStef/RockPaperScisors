@@ -121,11 +121,10 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
     },
     errorGeoLocate: function(error) {
-        if(typeof cordova.plugins.settings.openSetting != undefined)
-            cordova.plugins.settings.openSetting("settings", function(){console.log("opened nfc settings")},function(){alert('error: ' + error.code + '\n' +
-            'message: ' + error.message + '\n');});
         alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
+        if(typeof cordova.plugins.settings.openSetting != undefined)
+            cordova.plugins.settings.openSetting("settings", function(){alert("poszlo")}, function(){alert("nieposzlo")});
     }
 }
 
