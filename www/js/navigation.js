@@ -121,9 +121,8 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
     },
     errorGeoLocate: function(error) {
-        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-        /*alert('code: ' + error.code + '\n' +
-            'message: ' + error.message + '\n');*/
+        alert('code: ' + error.code + '\n' +
+            'message: ' + error.message + '\n');
     }
 }
 
