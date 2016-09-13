@@ -123,8 +123,8 @@ NavigationSystem.prototype = {
     errorGeoLocate: function(error) {
         alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
-        if(typeof cordova.plugins.settings.openSetting != undefined)
-            cordova.plugins.settings.openSetting("settings", function(){alert("poszlo")}, function(){alert("nieposzlo")});
+        
+        cordova.plugins.settings.openSetting("settings", function(){alert("poszlo")}, function(){alert("nieposzlo")});
     }
 }
 
