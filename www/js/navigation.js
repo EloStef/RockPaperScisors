@@ -81,13 +81,9 @@ NavigationSystem.prototype.setMapPos = function() {
 }
 
 NavigationSystem.prototype.loadRoute = function() {
-    var route = JSON.parse(localStorage.getItem("test"));
-
-    for (i = 0; i < route.coordinates.length; i++) {
-        L.geoJson(route.coordinates[i], {
-            style: lineStyle
-        }).addTo(map);
-    }
+    var route = new Route();
+    route.dehydrate(localStorage.getItem("test"));
+    route.loadOnMap();
 }
 
 NavigationSystem.prototype.successGeoLocate = function(pos) {

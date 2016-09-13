@@ -18,12 +18,12 @@
         <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
         <div>
             <div class="nav">
-                <button type="button" onclick="routingSystem.undo()">Undo</button>
-                <button type="button" onclick="routingSystem.redo()">Redo</button>
-                <button type="button" onclick="saveNewRoute()">Save</button>
+                <button type="button" class="navbtn" onclick="routingSystem.undo()">Undo</button>
+                <button type="button" class="navbtn" onclick="routingSystem.redo()">Redo</button>
+                <button type="button" class="navbtn" onclick="routingSystem.route.saveInTemporary()">Save</button>
             </div>
         </div>
-        <button class="menu" type="button" onclick="saveNewRoute()">Menu</button>
+        <button class="menubtn" type="button" onclick="">...</button>
     </div>
     <script type="text/javascript" src="lib/leaflet1.0.0/leaflet.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

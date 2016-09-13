@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $(".nav").toggle();
-    $(".menu").click(function () {
+    $(".menubtn").click(function () {
         if ( $(".nav").css('display') == 'none' ){
             $(".map").css("height", "80%");
         } else {
@@ -48,8 +48,6 @@ RoutingSystem.prototype = {
 
     redo: function() {
         var memento = this.routeCareTaker.redo();
-        console.log(memento);
-        console.log(this.routeCareTaker);
         if (memento) {
             this.route.dehydrate(memento);
             mapSystem.clearMapLayers();
@@ -81,11 +79,6 @@ RoutingSystem.prototype = {
             );
         }
     }
-}
-
-function saveNewRoute() {
-    localStorage.setItem(routingSystem.saveFormat.name, JSON.stringify(this.route.hydrate()));
-    window.location = "index.html";
 }
 
 var routingSystem = new RoutingSystem();

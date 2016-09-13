@@ -1,5 +1,4 @@
 var Route = function() {
-    this.name = "test";
     this.points = [];
     this.paths = [];
 };
@@ -37,5 +36,13 @@ Route.prototype = {
         this.name = m.name;
         this.points = m.points;
         this.paths = m.paths;
+    },
+    saveInTemporary: function() {
+        localStorage.setItem("temporary", routingSystem.route.hydrate());
+        window.location = "routeSave.html";
+    },
+    saveFromTemporary: function(name) {
+        var route = localStorage.getItem("temporary");
+        localStorage.setItem("N" + name, route);
     }
 }
