@@ -53,7 +53,7 @@ function rotateMap() {
         map.setBearing(navigationSystem.bearingNow);
     }
 }
-
+/*
 var NavigationSystem = function() {
     this.initAmount = 0;
 
@@ -123,7 +123,7 @@ NavigationSystem.prototype = {
         alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
     }
-}
+}*/
 
 /*function onRequestSuccess(success){
     console.log("Successfully requested accuracy: "+success.message);
@@ -139,7 +139,5 @@ function onRequestFailure(error){
 }
 
 cordova.plugins.locationAccuracy.request(onRequestSuccess, onRequestFailure, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);*/
-
-cordova.plugins.diagnostic.switchToLocationSettings();
 
 //var navigationSystem = new NavigationSystem();
