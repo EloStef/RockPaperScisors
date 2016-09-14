@@ -1,19 +1,11 @@
-cordova.plugins.locationAccuracy.canRequest(function(canRequest){
-    if(canRequest){
-        cordova.plugins.locationAccuracy.request(function (success){
-            alert("Successfully requested accuracy: "+success.message);
-        }, function (error){
-           alert("Accuracy request failed: error code="+error.code+"; error message="+error.message);
-           if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
-               if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
-                   cordova.plugins.diagnostic.switchToLocationSettings();
-               }
-           }
-        }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);
-    }
+
+cordova.plugins.settings.openSetting("nfc_settings", function (){
+    alert("DZIALA:");
+},function (){
+    alert("NIedziala");
 });
 
-function angleFromCoordinate(latLng1, latLng2) {
+/*function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
 
     var y = Math.sin(dLon) * Math.cos(latLng2.lat);
@@ -37,7 +29,7 @@ function MoveDegrees(degrees) {
     return degrees;
 }
 
-/*function rotateMap() {
+function rotateMap() {
     if (bearingNow == bearingTarget || positionBefore == null)
         return;
     bearingNow = MoveDegrees(bearingNow);
@@ -51,7 +43,7 @@ function MoveDegrees(degrees) {
         bearingNow += 1;
         map.setBearing(bearingNow);
     }
-}*/
+}
 
 function rotateMap() {
     if (navigationSystem.bearingNow == navigationSystem.bearingTarget || navigationSystem.positionBefore == null)
@@ -67,7 +59,7 @@ function rotateMap() {
         navigationSystem.bearingNow += 1;
         map.setBearing(navigationSystem.bearingNow);
     }
-}
+}*/
 /*
 var NavigationSystem = function() {
     this.initAmount = 0;
