@@ -1,3 +1,5 @@
+cordova.plugins.diagnostic.switchToBluetoothSettings();
+
 function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
 
@@ -21,8 +23,6 @@ function MoveDegrees(degrees) {
     }
     return degrees;
 }
-
-cordova.plugins.diagnostic.switchToLocationSettings();
 
 /*function rotateMap() {
     if (bearingNow == bearingTarget || positionBefore == null)
