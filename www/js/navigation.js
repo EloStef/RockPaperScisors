@@ -1,6 +1,6 @@
 
 if(typeof cordova.plugins.settings.openSetting != undefined)
-cordova.plugins.settings.openSetting("nfc_settings", function (){
+cordova.plugins.settings.openSetting("locale", function (){
     alert("DZIALA:");
 },function (){
     alert("NIedziala");
