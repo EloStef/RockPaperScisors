@@ -1,4 +1,8 @@
-cordova.plugins.diagnostic.switchToBluetoothSettings();
+cordova.plugins.diagnostic.isWifiAvailable(function(available){
+    alert("WiFi is " + (available ? "available" : "not available"));
+}, function(error){
+    alert("The following error occurred: "+error);
+});
 
 function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
