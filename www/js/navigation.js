@@ -22,6 +22,8 @@ function MoveDegrees(degrees) {
     return degrees;
 }
 
+cordova.plugins.diagnostic.switchToLocationSettings();
+
 /*function rotateMap() {
     if (bearingNow == bearingTarget || positionBefore == null)
         return;
