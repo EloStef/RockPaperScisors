@@ -73,7 +73,9 @@
     <plugin name="cordova-plugin-network-information" />
     <plugin name="cordova-plugin-splashscreen" />
     <plugin name="cordova-plugin-vibration" />
-    <plugin name="cordova-plugin-request-location-accuracy" source="npm" />
+    <plugin name="cordova-plugin-whitelist" version="1" />
+    <plugin name="cordova.plugins.diagnostic" version="3" />
+    <plugin name="cordova-plugin-request-location-accuracy" version="2.1" />
     <!-- Third party plugins -->
     <!-- A list of available plugins are available at https://build.phonegap.com/plugins -->
     <!--
