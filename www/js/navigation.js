@@ -1,7 +1,16 @@
-cordova.plugins.diagnostic.isWifiAvailable(function(available){
-    alert("WiFi is " + (available ? "available" : "not available"));
-}, function(error){
-    alert("The following error occurred: "+error);
+cordova.plugins.locationAccuracy.canRequest(function(canRequest){
+    if(canRequest){
+        cordova.plugins.locationAccuracy.request(function (success){
+            alert("Successfully requested accuracy: "+success.message);
+        }, function (error){
+           alert("Accuracy request failed: error code="+error.code+"; error message="+error.message);
+           if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
+               if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
+                   cordova.plugins.diagnostic.switchToLocationSettings();
+               }
+           }
+        }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);
+    }
 });
 
 function angleFromCoordinate(latLng1, latLng2) {
