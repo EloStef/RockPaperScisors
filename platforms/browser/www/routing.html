@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="lib/leaflet1.0.0/leaflet.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/routing.css" />
+    <title></title>
+</head>
+
+<body>
+    <div class="app">
+        <!--<button type="button" onclick="routingSystem.undo()">UNDO</button>
+        <button type="button" onclick="routingSystem.redo()">REDO</button>-->
+        <div id="map" class="map"></div>
+        <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
+        <div>
+            <div class="nav">
+                <button type="button" class="navbtn" onclick="routingSystem.undo()">Undo</button>
+                <button type="button" class="navbtn" onclick="routingSystem.redo()">Redo</button>
+                <button type="button" class="navbtn" onclick="routingSystem.route.saveInTemporary()">Save</button>
+            </div>
+        </div>
+        <button class="menubtn" type="button" onclick="">...</button>
+    </div>
+    <script type="text/javascript" src="lib/leaflet1.0.0/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mapElementsStyle.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript" src="js/careTaker.js"></script>
+    <script type="text/javascript" src="js/route.js"></script>
+    <script type="text/javascript" src="js/routing.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+    app.initialize();
+    </script>
+</body>
+
+</html>

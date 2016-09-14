@@ -66,7 +66,7 @@
     <plugin name="cordova-plugin-splashscreen" />
     <plugin name="cordova-plugin-vibration" />
     <plugin name="fr.louisbl.cordova.gpslocation" spec="0.1.0" source="pgb" />
-    <plugin name="nativesettingsopener" value="com.phonegap.plugins.nativesettingsopener" />
+    <plugin name="cordova-plugin-request-location-accuracy" source="npm" />
     <!-- Third party plugins -->
     <!-- A list of available plugins are available at https://build.phonegap.com/plugins -->
     <!--
