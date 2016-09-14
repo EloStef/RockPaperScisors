@@ -81,7 +81,6 @@ var NavigationSystem = function() {
 NavigationSystem.prototype = {
     initNavigation: function() {
         navigator.geolocation.watchPosition(this.successInitGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
-
     },
     successInitGeoLocate: function(pos) {
         this.initAmount += 1;
@@ -123,8 +122,7 @@ NavigationSystem.prototype = {
     errorGeoLocate: function(error) {
         alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
-        
-        
+
         cordova.plugins.settings.openSetting("settings", function(){alert("poszlo")}, function(){alert("nieposzlo")});
     }
 }
