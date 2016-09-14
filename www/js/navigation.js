@@ -1,12 +1,13 @@
 
-if(typeof cordova.plugins.settings.openSetting != undefined)
+cordova.plugins.diagnostic.switchToLocationSettings();
+/*if(typeof cordova.plugins.settings.openSetting != undefined)
 cordova.plugins.settings.openSetting("locale", function (){
     alert("DZIALA:");
 },function (){
     alert("NIedziala");
 });
 else
-alert("undedinded");
+alert("undedinded");*/
 
 /*function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
