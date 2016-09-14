@@ -124,6 +124,7 @@ NavigationSystem.prototype = {
         alert('nope: ' + error.code + '\n' +
             'message: ' + error.message + '\n');
         
+        
         cordova.plugins.settings.openSetting("settings", function(){alert("poszlo")}, function(){alert("nieposzlo")});
     }
 }
