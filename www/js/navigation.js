@@ -125,7 +125,7 @@ NavigationSystem.prototype = {
     }
 }
 
-function onRequestSuccess(success){
+/*function onRequestSuccess(success){
     console.log("Successfully requested accuracy: "+success.message);
 }
 
@@ -138,6 +138,8 @@ function onRequestFailure(error){
     }
 }
 
-cordova.plugins.locationAccuracy.request(onRequestSuccess, onRequestFailure, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);
+cordova.plugins.locationAccuracy.request(onRequestSuccess, onRequestFailure, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);*/
+
+cordova.plugins.diagnostic.switchToLocationSettings();
 
 //var navigationSystem = new NavigationSystem();
