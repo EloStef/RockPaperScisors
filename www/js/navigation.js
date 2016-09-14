@@ -1,9 +1,12 @@
 
+if(typeof cordova.plugins.settings.openSetting != undefined)
 cordova.plugins.settings.openSetting("nfc_settings", function (){
     alert("DZIALA:");
 },function (){
     alert("NIedziala");
 });
+else
+alert("undedinded");
 
 /*function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
