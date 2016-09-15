@@ -126,16 +126,16 @@ NavigationSystem.prototype = {
     },
     errorGeoLocate: function(error) {
         navigator.geolocation.clearWatch(this.watchGeoLocation);
-        gpsDialog();
+        //gpsDialog();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
     },
     gpsDialogYes: function() {
-        map.closeModal();
+        L.Map.Modal.HIDE;
         cordova.plugins.diagnostic.switchToLocationSettings();
     },
     gpsDialogNo: function() {
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
-        map.closeModal();
+        L.Map.Modal.HIDE;
     }
 }
 
