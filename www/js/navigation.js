@@ -1,15 +1,6 @@
+//gpsDialog();
 
-cordova.plugins.diagnostic.switchToLocationSettings();
-/*if(typeof cordova.plugins.settings.openSetting != undefined)
-cordova.plugins.settings.openSetting("locale", function (){
-    alert("DZIALA:");
-},function (){
-    alert("NIedziala");
-});
-else
-alert("undedinded");*/
-
-/*function angleFromCoordinate(latLng1, latLng2) {
+function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
 
     var y = Math.sin(dLon) * Math.cos(latLng2.lat);
@@ -63,14 +54,21 @@ function rotateMap() {
         navigationSystem.bearingNow += 1;
         map.setBearing(navigationSystem.bearingNow);
     }
-}*/
-/*
+}
+
 var NavigationSystem = function() {
+    
+    ////InitState - sprawdza czy gps jest włączony, jeśli jest ustawia przycisk na włączony i przechodzi do InitNavigationState, w drugim wypadku przechodzi na GpsOffState
+    ////GpsOffState - wyłącza wszelkie watchPosition i nic nie robi, po kliknięciu przycisku przechodzi w InitState
+    ////NavigationState - nawiguje, jeśli się nie uda przechodzi na GpsOffState
+    
+    this.state = "InitState";
     this.initAmount = 0;
 
     map.addControl(new label(id = "speedField", value = "Speed: 0"));
     map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
     map.addControl(new returnButton());
+    map.addControl(new navigationButton());
 
     this.naviMarker = L.Marker.movingMarker([
         [0, 0],
@@ -82,7 +80,8 @@ var NavigationSystem = function() {
     this.bearingNow = 0.0;
     this.bearingTarget = 0.0;
 
-    this.watchGeoLocation = navigator.geolocation.watchPosition(this.successInitGeoLocate.bind(this), this.errorGeoLocate, { timeout: 100, enableHighAccuracy: true });
+    this.watchGeoLocation;
+    this.initNavigation();
     var intervalRotateMap = window.setInterval(rotateMap, 30);
     var intervalPosMap = window.setInterval(this.setMapPos.bind(this), 50);
 
@@ -91,15 +90,7 @@ var NavigationSystem = function() {
 
 NavigationSystem.prototype = {
     initNavigation: function() {
-        navigator.geolocation.watchPosition(this.successInitGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
-    },
-    successInitGeoLocate: function(pos) {
-        this.initAmount += 1;
-        this.naviMarker.setLatLng(new L.LatLng(pos.coords.latitude, pos.coords.longitude));
-        if (this.initAmount < 10) {
-            navigator.geolocation.clearWatch(this.watchGeoLocation);
-            this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
-        }
+        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
     },
     setMapPos: function() {
         if (this.naviMarker.isRunning())
@@ -114,6 +105,7 @@ NavigationSystem.prototype = {
         }
     },
     successGeoLocate: function(pos) {
+        setNavigationButtonImage("url(img/navigationButtonOn.png)");
         document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
         document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
 
@@ -131,24 +123,20 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
     },
     errorGeoLocate: function(error) {
-        alert('nope: ' + error.code + '\n' +
-            'message: ' + error.message + '\n');
-    }
-}*/
-
-/*function onRequestSuccess(success){
-    console.log("Successfully requested accuracy: "+success.message);
-}
-
-function onRequestFailure(error){
-    console.error("Accuracy request failed: error code="+error.code+"; error message="+error.message);
-    if(error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED){
-        if(window.confirm("Failed to automatically set Location Mode to 'High Accuracy'. Would you like to switch to the Location Settings page and do this manually?")){
-            cordova.plugins.diagnostic.switchToLocationSettings();
-        }
+        gpsDialog();
+        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        navigator.geolocation.clearWatch(this.watchGeoLocation);
+    },
+    gpsDialogYes: function(){
+        cordova.plugins.diagnostic.switchToLocationSettings();
+        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
+    },
+    gpsDialogNo: function(){
+        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        map.closeModal();
     }
 }
 
-cordova.plugins.locationAccuracy.request(onRequestSuccess, onRequestFailure, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY);*/
+var navigationSystem = new NavigationSystem();
 
-//var navigationSystem = new NavigationSystem();
+

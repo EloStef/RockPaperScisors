@@ -10,8 +10,8 @@ var returnButton = L.Control.extend({
         container.style.backgroundColor = 'white';
         container.style.backgroundImage = "url(img/returnButton.png)";
         container.style.backgroundSize = "25px 25px";
-        container.style.width = '25px';
-        container.style.height = '25px';
+        container.style.width = '26px';
+        container.style.height = '26px';
 
         container.onclick = function() {
             window.location = "index.html";
@@ -19,6 +19,41 @@ var returnButton = L.Control.extend({
         return container;
     }
 });
+
+var navigationButton = L.Control.extend({
+
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function(map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+        container.id = 'navigationBtn';
+        container.style.backgroundColor = 'white';
+        container.style.backgroundImage = "url(img/navigationButtonOff.png)";
+        container.style.backgroundSize = "25px 25px";
+        container.style.width = '26px';
+        container.style.height = '26px';
+
+        container.onclick = function() {
+            navigationSystem.initNavigation();
+        }
+        return container;
+    }
+});
+
+function setNavigationButtonImage(img){
+    $("#navigationBtn").css("backgroundImage", img);
+}
+
+function swapNavigationButtonImage(){
+    var bakcground = $("#navigationBtn").css("backgroundImage");
+    if(bakcground.indexOf("navigationButtonOff") !== -1)
+        $("#navigationBtn").css("backgroundImage", "url(img/navigationButtonOn.png)");
+    else
+        $("#navigationBtn").css("backgroundImage", "url(img/navigationButtonOff.png)");
+}
 
 var label = L.Control.extend({
 
@@ -42,17 +77,47 @@ var label = L.Control.extend({
 });
 
 var lineStyle = {
-        "color": "#ff7800",
-        "weight": 4,
-        "opacity": 0.65
-    };
+    "color": "#ff7800",
+    "weight": 4,
+    "opacity": 0.65
+};
 
 var routingMarkIcon = L.icon({
-        iconUrl: 'img/routingMark.png',
-        iconAnchor: [6, 6]
-    });
+    iconUrl: 'img/routingMark.png',
+    iconAnchor: [6, 6]
+});
 
 var navigationIcon = L.icon({
     iconUrl: 'img/navigationIcon.png',
     iconAnchor: [10, 10]
 });
+
+var gpsDialog = function() {
+    map.fire('modal', {
+
+        content: '<h4>Gps</h4><div style="text-align: center;">GPS is not working, do you want to turn on it?<button style="margin-right: 5px">Yes</button><button>No</button></div>', // HTML string
+        width: 100,
+        height: 130,
+
+        closeTitle: 'close', // alt title of the close button
+        zIndex: 10000, // needs to stay on top of the things
+        transitionDuration: 300, // expected transition duration
+
+        template: '{content}', // modal body template, this doesn't include close button and wrappers
+
+        // callbacks for convenience,
+        // you can set up you handlers here for the contents
+        onShow: function(evt) {
+            var modal = evt.modal; },
+        onHide: function(evt) {
+            var modal = evt.modal; },
+
+        // change at your own risk
+        OVERLAY_CLS: 'overlay', // overlay(backdrop) CSS class
+        MODAL_CLS: 'modal', // all modal blocks wrapper CSS class
+        MODAL_CONTENT_CLS: 'modal-content', // modal window CSS class
+        INNER_CONTENT_CLS: 'modal-inner', // inner content wrapper
+        SHOW_CLS: 'show', // `modal open` CSS class, here go your transitions
+        CLOSE_CLS: 'close' // `x` button CSS class
+    });
+}
