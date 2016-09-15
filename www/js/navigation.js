@@ -90,7 +90,7 @@ var NavigationSystem = function() {
 
 NavigationSystem.prototype = {
     initNavigation: function() {
-        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
+        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate.bind(this), { timeout: 2000, enableHighAccuracy: true });
     },
     setMapPos: function() {
         if (this.naviMarker.isRunning())
@@ -126,7 +126,6 @@ NavigationSystem.prototype = {
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
-        navigator.geolocation.clearWatch(this.watchGeoLocation);
     },
     gpsDialogYes: function(){
         cordova.plugins.diagnostic.switchToLocationSettings();
