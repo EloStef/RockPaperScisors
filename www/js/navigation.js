@@ -57,11 +57,11 @@ function rotateMap() {
 }
 
 var NavigationSystem = function() {
-    
+
     ////InitState - sprawdza czy gps jest włączony, jeśli jest ustawia przycisk na włączony i przechodzi do InitNavigationState, w drugim wypadku przechodzi na GpsOffState
     ////GpsOffState - wyłącza wszelkie watchPosition i nic nie robi, po kliknięciu przycisku przechodzi w InitState
     ////NavigationState - nawiguje, jeśli się nie uda przechodzi na GpsOffState
-    
+
     this.state = "InitState";
     this.initAmount = 0;
 
@@ -106,8 +106,10 @@ NavigationSystem.prototype = {
     },
     successGeoLocate: function(pos) {
         setNavigationButtonImage("url(img/navigationButtonOn.png)");
-        document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
-        document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
+        if (pos.coords.speed != undefined)
+            document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
+        if (pos.coords.accuracy != undefined)
+            document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
 
         if ((pos.coords.latitude == this.position.lat && pos.coords.longitude == this.position.lng))
             return;
@@ -127,12 +129,11 @@ NavigationSystem.prototype = {
         gpsDialog();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
     },
-    gpsDialogYes: function(){
+    gpsDialogYes: function() {
         map.closeModal();
         cordova.plugins.diagnostic.switchToLocationSettings();
-        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
     },
-    gpsDialogNo: function(){
+    gpsDialogNo: function() {
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
         map.closeModal();
     }
@@ -140,4 +141,4 @@ NavigationSystem.prototype = {
 
 var navigationSystem = new NavigationSystem();
 
-
+gpsDialog();
