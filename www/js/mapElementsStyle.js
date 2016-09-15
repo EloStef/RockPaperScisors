@@ -95,7 +95,7 @@ var navigationIcon = L.icon({
 var gpsDialog = function() {
     map.fire('modal', {
 
-        content: '<h4>Gps</h4><div style="text-align: center;">GPS is not working, do you want to turn on it?<button style="margin-right: 5px">Yes</button><button>No</button></div>', // HTML string
+        content: '<h4>Gps</h4><div style="text-align: center;">GPS is not working, do you want to turn on it?<button style="margin-right: 5px" onclick="navigationSystem.gpsDialogNo()">Yes</button><button onclick="navigationSystem.gpsDialogYes()">No</button></div>', // HTML string
         width: 100,
         height: 130,
 

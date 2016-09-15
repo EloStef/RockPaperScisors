@@ -128,6 +128,7 @@ NavigationSystem.prototype = {
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
     },
     gpsDialogYes: function(){
+        map.closeModal();
         cordova.plugins.diagnostic.switchToLocationSettings();
         this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate, { timeout: 2000, enableHighAccuracy: true });
     },
