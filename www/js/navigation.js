@@ -123,6 +123,7 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
     },
     errorGeoLocate: function(error) {
+        navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
         navigator.geolocation.clearWatch(this.watchGeoLocation);
