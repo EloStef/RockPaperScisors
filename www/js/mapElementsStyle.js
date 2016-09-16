@@ -37,19 +37,25 @@ var navigationButton = L.Control.extend({
         container.style.height = '26px';
 
         container.onclick = function() {
-            navigationSystem.initNavigation();
+            var bakcground = $("#navigationBtn").css("backgroundImage");
+            if (bakcground.indexOf("navigationButtonOff") !== -1) {
+                navigationSystem.initNavigation();
+            } else {
+                navigationSystem.turnOffNavigation();
+            }
+
         }
         return container;
     }
 });
 
-function setNavigationButtonImage(img){
+function setNavigationButtonImage(img) {
     $("#navigationBtn").css("backgroundImage", img);
 }
 
-function swapNavigationButtonImage(){
+function swapNavigationButtonImage() {
     var bakcground = $("#navigationBtn").css("backgroundImage");
-    if(bakcground.indexOf("navigationButtonOff") !== -1)
+    if (bakcground.indexOf("navigationButtonOff") !== -1)
         $("#navigationBtn").css("backgroundImage", "url(img/navigationButtonOn.png)");
     else
         $("#navigationBtn").css("backgroundImage", "url(img/navigationButtonOff.png)");
@@ -109,9 +115,12 @@ var gpsDialog = function() {
         // callbacks for convenience,
         // you can set up you handlers here for the contents
         onShow: function(evt) {
-            var modal = evt.modal; },
+            var modal = evt.modal;
+        },
         onHide: function(evt) {
-            var modal = evt.modal; $(".leaflet-modal").hide();},
+            var modal = evt.modal;
+            $(".leaflet-modal").hide();
+        },
 
         // change at your own risk
         OVERLAY_CLS: 'overlay', // overlay(backdrop) CSS class

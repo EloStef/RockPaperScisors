@@ -88,7 +88,24 @@ var NavigationSystem = function() {
 
 NavigationSystem.prototype = {
     initNavigation: function() {
-        this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate.bind(this), { timeout: 2000, enableHighAccuracy: true });
+        this.initAmount = 0;
+        this.watchGeoLocation = navigator.geolocation.watchPosition(this.initSuccessGeoLocate.bind(this), this.errorGeoLocate.bind(this), { timeout: 100, enableHighAccuracy: true });
+    },
+    initSuccessGeoLocate: function(pos) {
+        setNavigationButtonImage("url(img/navigationButtonOn.png)");
+        this.initAmount += 1;
+        this.position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
+        this.naviMarker.moveTo([pos.coords.latitude, pos.coords.longitude], 1);
+        map.panTo(this.naviMarker._latlng);
+        if (this.initAmount > 10) {
+            navigator.geolocation.clearWatch(this.watchGeoLocation);
+            this.watchGeoLocation = navigator.geolocation.watchPosition(this.successGeoLocate.bind(this), this.errorGeoLocate.bind(this), { timeout: 2000, enableHighAccuracy: true });
+        }
+    },
+    turnOffNavigation: function() {
+        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        navigator.geolocation.clearWatch(this.watchGeoLocation);
+        this.bearingTarget = 0;
     },
     setMapPos: function() {
         if (this.naviMarker.isRunning())
