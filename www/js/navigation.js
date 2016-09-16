@@ -126,7 +126,7 @@ NavigationSystem.prototype = {
     },
     errorGeoLocate: function(error) {
         navigator.geolocation.clearWatch(this.watchGeoLocation);
-        //gpsDialog();
+        gpsDialog();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
     },
     gpsDialogYes: function() {
