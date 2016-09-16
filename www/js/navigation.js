@@ -1,5 +1,3 @@
-//gpsDialog();
-
 function angleFromCoordinate(latLng1, latLng2) {
     var dLon = (latLng2.lng - latLng1.lng);
 
@@ -140,10 +138,3 @@ NavigationSystem.prototype = {
 }
 
 var navigationSystem = new NavigationSystem();
-
-
-
-//$( ".modal" ).remove();
-
-//gpsDialog();
-//$( ".leaflet-top.leaflet-left" ).append( '<div class="leaflet-bar leaflet-control leaflet-control-custom" id="navigationBtn" style="width: 26px; height: 26px; background-image: url(&quot;img/navigationButtonOff.png&quot;); background-color: white; background-size: 25px 25px;"></div>' );
