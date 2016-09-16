@@ -130,15 +130,20 @@ NavigationSystem.prototype = {
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
     },
     gpsDialogYes: function() {
-        L.Map.Modal.HIDE;
+        $(".leaflet-modal").hide();
         cordova.plugins.diagnostic.switchToLocationSettings();
     },
     gpsDialogNo: function() {
+        $(".leaflet-modal").hide();
         setNavigationButtonImage("url(img/navigationButtonOff.png)");
-        L.Map.Modal.HIDE;
     }
 }
 
 var navigationSystem = new NavigationSystem();
 
-gpsDialog();
+
+
+//$( ".modal" ).remove();
+
+//gpsDialog();
+//$( ".leaflet-top.leaflet-left" ).append( '<div class="leaflet-bar leaflet-control leaflet-control-custom" id="navigationBtn" style="width: 26px; height: 26px; background-image: url(&quot;img/navigationButtonOff.png&quot;); background-color: white; background-size: 25px 25px;"></div>' );

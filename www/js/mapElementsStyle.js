@@ -93,9 +93,10 @@ var navigationIcon = L.icon({
 });
 
 var gpsDialog = function() {
+    $(".leaflet-modal").show();
     map.fire('modal', {
 
-        content: '<h4>Gps</h4><div style="text-align: center;">GPS is not working, do you want to turn on it?<button style="margin-right: 5px" onclick="navigationSystem.gpsDialogNo()">Yes</button><button onclick="navigationSystem.gpsDialogYes()">No</button></div>', // HTML string
+        content: '<h4>Gps</h4><div style="text-align: center;">GPS is not working, do you want to turn on it?<button style="margin-right: 5px" onclick="navigationSystem.gpsDialogYes()">Yes</button><button onclick="navigationSystem.gpsDialogNo()">No</button></div>', // HTML string
         width: 100,
         height: 130,
 
@@ -110,7 +111,7 @@ var gpsDialog = function() {
         onShow: function(evt) {
             var modal = evt.modal; },
         onHide: function(evt) {
-            var modal = evt.modal; },
+            var modal = evt.modal; $(".leaflet-modal").hide();},
 
         // change at your own risk
         OVERLAY_CLS: 'overlay', // overlay(backdrop) CSS class
