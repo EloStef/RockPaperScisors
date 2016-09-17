@@ -1,7 +1,7 @@
-$(document).ready(function () {
+$(document).ready(function() {
     $(".nav").toggle();
-    $(".menubtn").click(function () {
-        if ( $(".nav").css('display') == 'none' ){
+    $(".menubtn").click(function() {
+        if ($(".nav").css('display') == 'none') {
             $(".map").css("height", "80%");
         } else {
             $(".map").css("height", "95%");
@@ -9,6 +9,7 @@ $(document).ready(function () {
         $(".nav").toggle();
     });
 });
+//b.addTo(map);
 
 var RoutingSystem = function() {
     this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
@@ -18,8 +19,6 @@ var RoutingSystem = function() {
 
     this.routeCareTaker = new CareTaker();
     this.routeCareTaker.add(this.route.hydrate());
-
-    map.addControl(new returnButton());
 
     map.on('click', function(clickEvent) {
         routingSystem.createNewRoute(clickEvent);
@@ -60,9 +59,7 @@ RoutingSystem.prototype = {
         if (this.route.getLastPoint() == null) {
             this.route.addNewPoint(clickEvent.latlng);
             mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
-
             this.routeCareTaker.add(this.route.hydrate());
-            console.log(this.routeCareTaker);
         } else {
             var self = this;
             $.getJSON(
@@ -78,8 +75,8 @@ RoutingSystem.prototype = {
                 }
             );
         }
+        setLastCoords(clickEvent.latlng.lat, clickEvent.latlng.lng);
     }
 }
 
 var routingSystem = new RoutingSystem();
-

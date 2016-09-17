@@ -22,10 +22,10 @@ html, body, {
     margin: 0px 0px -1px 0px;
 }
 
-button {
+.navbtn {
     border: none;
     color: white;
-    background-color: #008CBA; /* Green */
+    background-color: #008CBA;
     padding: 5px 32px;
     text-align: center;
     text-decoration: none;
@@ -35,10 +35,10 @@ button {
     cursor: pointer;
 }
 
-button:hover, button:active {
+.navbtn:hover, .navbtn:active {
     background-color: #87CEFA;
 }
 
-button:focus {
+.navbtn:focus {
     outline:0;
 };

@@ -55,22 +55,27 @@ function rotateMap() {
 }
 
 var NavigationSystem = function() {
-
-    ////InitState - sprawdza czy gps jest włączony, jeśli jest ustawia przycisk na włączony i przechodzi do InitNavigationState, w drugim wypadku przechodzi na GpsOffState
-    ////GpsOffState - wyłącza wszelkie watchPosition i nic nie robi, po kliknięciu przycisku przechodzi w InitState
-    ////NavigationState - nawiguje, jeśli się nie uda przechodzi na GpsOffState
-
     this.state = "InitState";
     this.initAmount = 0;
 
     map.addControl(new label(id = "speedField", value = "Speed: 0"));
     map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
-    map.addControl(new returnButton());
-    map.addControl(new navigationButton());
+    newButton(
+        '<img id="navimg" style="margin: -1px 0px 0px -5px;" src="img/navigationButtonOff.png">',
+        function() {
+            if ($("#navimg").attr("src").indexOf("navigationButtonOff") !== -1) {
+                navigationSystem.initNavigation();
+            } else {
+                navigationSystem.turnOffNavigation();
+            }
+        },
+        'topleft',
+        'navigationBtn');
 
+    var lastCoords = getLastCoords();
     this.naviMarker = L.Marker.movingMarker([
-        [0, 0],
-        [0, 0]
+        [lastCoords[0], lastCoords[1]],
+        [lastCoords[0], lastCoords[1]]
     ], [10000], { autostart: true, icon: navigationIcon }).addTo(map);
 
     this.position = new L.latLng(0, 0);
@@ -92,7 +97,7 @@ NavigationSystem.prototype = {
         this.watchGeoLocation = navigator.geolocation.watchPosition(this.initSuccessGeoLocate.bind(this), this.errorGeoLocate.bind(this), { timeout: 100, enableHighAccuracy: true });
     },
     initSuccessGeoLocate: function(pos) {
-        setNavigationButtonImage("url(img/navigationButtonOn.png)");
+        setNavigationButtonImage("img/navigationButtonOn.png");
         this.initAmount += 1;
         this.position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
         this.naviMarker.moveTo([pos.coords.latitude, pos.coords.longitude], 1);
@@ -103,7 +108,7 @@ NavigationSystem.prototype = {
         }
     },
     turnOffNavigation: function() {
-        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        setNavigationButtonImage("img/navigationButtonOff.png");
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         this.bearingTarget = 0;
     },
@@ -120,7 +125,7 @@ NavigationSystem.prototype = {
         }
     },
     successGeoLocate: function(pos) {
-        setNavigationButtonImage("url(img/navigationButtonOn.png)");
+        setNavigationButtonImage("img/navigationButtonOn.png");
         if (pos.coords.speed != undefined)
             document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
         if (pos.coords.accuracy != undefined)
@@ -138,11 +143,15 @@ NavigationSystem.prototype = {
         this.bearingTarget = 180 - angleFromCoordinate(this.position, this.positionBefore);
         this.bearingTarget = MoveDegrees(this.bearingTarget);
         this.bearingNow = MoveDegrees(this.bearingNow);
+
+        setLastCoords(pos.coords.latitude, pos.coords.longitude);
     },
     errorGeoLocate: function(error) {
+        console.log("idzie");
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();
-        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        gpsDialog();
+        setNavigationButtonImage("img/navigationButtonOff.png");
     },
     gpsDialogYes: function() {
         $(".leaflet-modal").hide();
@@ -150,7 +159,7 @@ NavigationSystem.prototype = {
     },
     gpsDialogNo: function() {
         $(".leaflet-modal").hide();
-        setNavigationButtonImage("url(img/navigationButtonOff.png)");
+        setNavigationButtonImage("img/navigationButtonOff.png");
     }
 }
 

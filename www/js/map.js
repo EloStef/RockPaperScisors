@@ -5,10 +5,21 @@ var blackosmUrl = 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
         attribution: blackosmAttrib
     });
 
+function getLastCoords() {
+    var lastcords = localStorage.getItem("lastcoords");
+    if (lastcords == null)
+        return [52.2318, 21.0060, 12];
+    return JSON.parse(lastcords);
+}
+
+function setLastCoords(lat, lng) {
+    localStorage.setItem("lastcoords", JSON.stringify([lat, lng, map.getZoom()]));
+}
+
 var map = L.map('map', {
         rotate: true
     })
-    .setView([55, 10], 12)
+    .setView([getLastCoords()[0], getLastCoords()[1]], getLastCoords()[2])
     .addLayer(blackosm);
 
 var MapSystem = function() {
@@ -19,6 +30,12 @@ var MapSystem = function() {
 
     this.linesLayer = L.layerGroup();
     this.linesLayer.addTo(this.map);
+
+    newButton(
+        '<img style="margin: -1px 0px 0px -5px;" src="img/returnButton.png">',
+        function() { window.location = "index.html"; },
+        'bottomleft',
+        'returnBtn');
 }
 
 MapSystem.prototype = {
