@@ -33,10 +33,10 @@ Route.prototype = {
             navigationPath = navigationPath.concat(this.paths[i].coordinates);
         }
         this.paths[0].coordinates = navigationPath;
-        this.paths = new Array(this.paths[0]);
+        /*this.paths = new Array(this.paths[0]);
         console.log(mapSystem.addLinesFromGeoJson(this.paths[0], lineStyle));
         this.paths[0].coordinates.splice(0, 1);
-        console.log(this.paths[0].coordinates);
+        console.log(this.paths[0].coordinates);*/
     },
     hydrate: function() {
         var memento = JSON.stringify(this);

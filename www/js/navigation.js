@@ -146,7 +146,6 @@ NavigationSystem.prototype = {
 
         setLastCoords(pos.coords.latitude, pos.coords.longitude);
 
-        mapSystem.clearMapLayers();
         this.route.loadOnMapForNavigation();
 
         console.log(this.distance(this.position.lat, this.position.lng, 52.2318, 21.0060, "K"));
