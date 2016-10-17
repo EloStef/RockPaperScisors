@@ -87,6 +87,7 @@ var NavigationSystem = function() {
     this.watchGeoLocation;
     this.initNavigation();
     var intervalRotateMap = window.setInterval(rotateMap, 30);
+    var intervalPosMap = window.setInterval(this.setMapPos.bind(this), 100);
 
     this.loadRoute();
 }
