@@ -57,6 +57,7 @@ function rotateMap() {
 var NavigationSystem = function() {
     this.state = "InitState";
     this.initAmount = 0;
+    this.route = new Route();
 
     map.addControl(new label(id = "speedField", value = "Speed: 0"));
     map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
@@ -86,7 +87,6 @@ var NavigationSystem = function() {
     this.watchGeoLocation;
     this.initNavigation();
     var intervalRotateMap = window.setInterval(rotateMap, 30);
-    var intervalPosMap = window.setInterval(this.setMapPos.bind(this), 50);
 
     this.loadRoute();
 }
@@ -117,11 +117,10 @@ NavigationSystem.prototype = {
             map.panTo(this.naviMarker._latlng);
     },
     loadRoute: function() {
-        var route = new Route();
         var routejson = localStorage.getItem(location.search.split('=')[1]);
         if (routejson != null) {
-            route.dehydrate(routejson);
-            route.loadOnMap();
+            this.route.dehydrate(routejson);
+            this.route.loadOnMapForNavigation();
         }
     },
     successGeoLocate: function(pos) {
@@ -145,12 +144,15 @@ NavigationSystem.prototype = {
         this.bearingNow = MoveDegrees(this.bearingNow);
 
         setLastCoords(pos.coords.latitude, pos.coords.longitude);
+
+        mapSystem.clearMapLayers();
+        this.route.loadOnMapForNavigation();
+
+        console.log(this.distance(this.position.lat, this.position.lng, 52.2318, 21.0060, "K"));
     },
     errorGeoLocate: function(error) {
-        console.log("idzie");
         navigator.geolocation.clearWatch(this.watchGeoLocation);
-        gpsDialog();
-        gpsDialog();
+        gpsDialog();//Nie wiem czemu tu dwa były
         setNavigationButtonImage("img/navigationButtonOff.png");
     },
     gpsDialogYes: function() {
@@ -160,6 +162,19 @@ NavigationSystem.prototype = {
     gpsDialogNo: function() {
         $(".leaflet-modal").hide();
         setNavigationButtonImage("img/navigationButtonOff.png");
+    },
+    distance: function(lat1, lon1, lat2, lon2, unit) {
+        var radlat1 = Math.PI * lat1 / 180
+        var radlat2 = Math.PI * lat2 / 180
+        var theta = lon1 - lon2
+        var radtheta = Math.PI * theta / 180
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist)
+        dist = dist * 180 / Math.PI
+        dist = dist * 60 * 1.1515
+        if (unit == "K") { dist = dist * 1.609344 }
+        if (unit == "N") { dist = dist * 0.8684 }
+        return dist
     }
 }
 

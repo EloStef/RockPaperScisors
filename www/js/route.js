@@ -1,6 +1,7 @@
 var Route = function() {
     this.points = [];
     this.paths = [];
+    this.i = 0;
 };
 
 Route.prototype = {
@@ -25,6 +26,17 @@ Route.prototype = {
         for (i = 0; i < this.points.length; i++) {
         	mapSystem.addMarker(this.points[i], routingMarkIcon);
         }
+    },
+    loadOnMapForNavigation: function() {
+        var navigationPath = [];
+        for (i = 0; i < this.paths.length; i++) {
+            navigationPath = navigationPath.concat(this.paths[i].coordinates);
+        }
+        this.paths[0].coordinates = navigationPath;
+        this.paths = new Array(this.paths[0]);
+        console.log(mapSystem.addLinesFromGeoJson(this.paths[0], lineStyle));
+        this.paths[0].coordinates.splice(0, 1);
+        console.log(this.paths[0].coordinates);
     },
     hydrate: function() {
         var memento = JSON.stringify(this);
