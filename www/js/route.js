@@ -6,26 +6,46 @@ var Route = function() {
 
 Route.prototype = {
     getLastPoint: function(latlng) {
-    	if(this.points.length > 0)
-        	return this.points[this.points.length - 1];
+        if (this.points.length > 0)
+            return this.points[this.points.length - 1];
         return null;
     },
     setName: function(name) {
         this.name = name;
     },
-    addNewPoint: function(point){
-    	this.points.push(point);
+    addNewPoint: function(point) {
+        this.points.push(point);
     },
-    addNewPath: function(points){
-    	this.paths.push(points);
+    addNewPath: function(coords, instructions) {
+        for (var i = 0; i < instructions.length - 1; i++) {
+            var road_type = "";
+            if (instructions[i].annotation_text != undefined)
+                if (instructions[i].annotation_text.indexOf("cycleway") !== -1)
+                    road_type = "cycleway"
+                else
+                    road_type = "normal";
+            else
+                road_type = "normal";
+            for (j = instructions[i].interval[0]; j < instructions[i].interval[1]; j++) {
+                coords.coordinates[j].road_type = road_type;
+            }
+        }
+        var self = this;
+        this.separtePathByRoadType(coords.coordinates).forEach(function(path) {
+                self.paths.push(path);
+            });
+        console.log(this.paths);
     },
-    loadOnMap: function() {
-        for (i = 0; i < this.paths.length; i++) {
-            mapSystem.addLinesFromGeoJson(this.paths[i], lineStyle);
+    loadOnMap: function(withMarks) {
+        mapSystem.clearMapLayers();
+        console.log(this.paths.length);
+        for (var i = 0; i < this.paths.length; i++) {
+            mapSystem.addLinesFromGeoJson(this.paths[i]);
         }
-        for (i = 0; i < this.points.length; i++) {
-        	mapSystem.addMarker(this.points[i], routingMarkIcon);
-        }
+        if (withMarks)
+            for (i = 0; i < this.points.length; i++) {
+                mapSystem.addMarker(this.points[i], routingMarkIcon);
+            }
     },
     loadOnMapForNavigation: function() {
         var navigationPath = [];
@@ -33,10 +53,29 @@ Route.prototype = {
             navigationPath = navigationPath.concat(this.paths[i].coordinates);
         }
         this.paths[0].coordinates = navigationPath;
-        /*this.paths = new Array(this.paths[0]);
-        console.log(mapSystem.addLinesFromGeoJson(this.paths[0], lineStyle));
-        this.paths[0].coordinates.splice(0, 1);
-        console.log(this.paths[0].coordinates);*/
+        this.paths = new Array(this.paths[0]);
+        this.loadOnMap(false);
+        mapSystem.addLinesFromGeoJson(this.paths[0], lineMainCycleRoad);
+    },
+    separtePathByRoadType: function(coords) {
+        var linesByRoadType = [1, 1];
+        var amount = 2;
+        var lastRoadType = coords[0].road_type;
+        linesByRoadType.push({ coordinates: [], road_type: lastRoadType, type: "LineString" });
+        linesByRoadType[amount].coordinates.push(coords[0]);
+        for (var i = 1; i < coords.length; i++) {
+            linesByRoadType[amount].coordinates.push(coords[i]);
+            if (lastRoadType != coords[i].road_type) {
+                amount++;
+                lastRoadType = coords[i].road_type;
+                linesByRoadType.push({ coordinates: [], road_type: lastRoadType, type: "LineString" });
+                linesByRoadType[amount].coordinates.push(coords[i]);
+            }
+        }
+        linesByRoadType.shift();
+        linesByRoadType.shift();
+        linesByRoadType.pop();
+        return linesByRoadType;
     },
     hydrate: function() {
         var memento = JSON.stringify(this);
@@ -46,7 +85,9 @@ Route.prototype = {
         var m = JSON.parse(memento);
         this.name = m.name;
         this.points = m.points;
+        console.log(m.paths);
         this.paths = m.paths;
+        console.log(this.paths);
     },
     saveInTemporary: function() {
         localStorage.setItem("temporary", routingSystem.route.hydrate());

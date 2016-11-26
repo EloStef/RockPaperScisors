@@ -9,7 +9,6 @@ $(document).ready(function() {
         $(".nav").toggle();
     });
 });
-//b.addTo(map);
 
 var RoutingSystem = function() {
     this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
@@ -40,7 +39,7 @@ RoutingSystem.prototype = {
         if (memento) {
             this.route.dehydrate(memento);
             mapSystem.clearMapLayers();
-            this.route.loadOnMap();
+            this.route.loadOnMap(true);
         }
         return;
     },
@@ -50,7 +49,7 @@ RoutingSystem.prototype = {
         if (memento) {
             this.route.dehydrate(memento);
             mapSystem.clearMapLayers();
-            this.route.loadOnMap();
+            this.route.loadOnMap(true);
         }
         return;
     },
@@ -66,11 +65,11 @@ RoutingSystem.prototype = {
                 this.getGraphhopperUrl(this.graphhopperPointString(self.route.getLastPoint()),
                     this.graphhopperPointString(clickEvent.latlng)),
                 function(data) {
-                    mapSystem.addLinesFromGeoJson(data.paths[0].points, lineStyle);
+                    //mapSystem.addLinesFromGeoJson(data.paths[0].points);
                     self.route.addNewPoint(clickEvent.latlng);
-                    self.route.addNewPath(data.paths[0].points);
+                    self.route.addNewPath(data.paths[0].points, data.paths[0].instructions);
                     mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
-
+                    self.route.loadOnMap(true);
                     self.routeCareTaker.add(self.route.hydrate());
                 }
             );

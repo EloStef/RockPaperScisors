@@ -40,9 +40,27 @@ var label = L.Control.extend({
     }
 });
 
-var lineStyle = {
+var lineMainNormalRoad = {
     "color": "#ff7800",
-    "weight": 4,
+    "weight": 5,
+    "opacity": 0.65
+};
+
+var lineMainCycleRoad = {
+    "color": "#ADFF2F",
+    "weight": 5,
+    "opacity": 0.65
+};
+
+var lineSideCycleRoad = {
+    "color": "#ff7800",
+    "weight": 3,
+    "opacity": 0.65
+};
+
+var lineSideCycleRoad = {
+    "color": "#ADFF2F",
+    "weight": 3,
     "opacity": 0.65
 };
 

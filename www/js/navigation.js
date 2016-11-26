@@ -121,7 +121,7 @@ NavigationSystem.prototype = {
         var routejson = localStorage.getItem(location.search.split('=')[1]);
         if (routejson != null) {
             this.route.dehydrate(routejson);
-            this.route.loadOnMapForNavigation();
+            this.route.loadOnMap(false);
         }
     },
     successGeoLocate: function(pos) {
@@ -146,12 +146,13 @@ NavigationSystem.prototype = {
 
         setLastCoords(pos.coords.latitude, pos.coords.longitude);
 
-        this.route.loadOnMapForNavigation();
+        this.route.loadOnMap(false);
 
         console.log(this.distance(this.position.lat, this.position.lng, 52.2318, 21.0060, "K"));
     },
     errorGeoLocate: function(error) {
         navigator.geolocation.clearWatch(this.watchGeoLocation);
+        gpsDialog();
         gpsDialog();//Nie wiem czemu tu dwa były
         setNavigationButtonImage("img/navigationButtonOff.png");
     },

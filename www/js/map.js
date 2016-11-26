@@ -44,8 +44,14 @@ MapSystem.prototype = {
         this.markersLayer.addLayer(newMarker);
         return newMarker;
     },
-    addLinesFromGeoJson: function(points, style) {
-        var newLines = L.geoJson(points, { style: style });
+    addLinesFromGeoJson: function(points) {
+        var newLines = L.geoJson(points, {
+            style: function(feature) {
+                if (feature.geometry.road_type == "cycleway")
+                    return lineMainCycleRoad;
+                return lineMainNormalRoad;
+            }
+        });
         this.linesLayer.addLayer(newLines);
         return newLines;
     },
