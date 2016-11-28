@@ -57,7 +57,7 @@ RoutingSystem.prototype = {
     createNewRoute: function(clickEvent) {
         if (this.route.getLastPoint() == null) {
             this.route.addNewPoint(clickEvent.latlng);
-            mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
+            this.route.loadOnMap(true);
             this.routeCareTaker.add(this.route.hydrate());
         } else {
             var self = this;

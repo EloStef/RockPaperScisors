@@ -69,6 +69,16 @@ var routingMarkIcon = L.icon({
     iconAnchor: [6, 6]
 });
 
+var startMarkIcon = L.icon({
+    iconUrl: 'img/startMark.png',
+    iconAnchor: [6, 6]
+});
+
+var endMarkIcon = L.icon({
+    iconUrl: 'img/endMark.png',
+    iconAnchor: [6, 6]
+});
+
 var navigationIcon = L.icon({
     iconUrl: 'img/navigationIcon.png',
     iconAnchor: [10, 10]

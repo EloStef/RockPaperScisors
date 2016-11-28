@@ -10,6 +10,10 @@ var baselayers = {
     maxZoom: 18,
     attribution: ''
     }),
+    "Gray": L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }),
     "Earth": L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: '',
     maxZoom: 18,
@@ -17,28 +21,6 @@ var baselayers = {
 }
 
 var overlays = {};
-/*var OpenStreetMap_DE = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-
-var HERE_hybridDay = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
-    attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-    subdomains: '1234',
-    mapID: 'newest',
-    app_id: '<your app_id>',
-    app_code: '<your app_code>',
-    base: 'aerial',
-    maxZoom: 18,
-    type: 'maptile',
-    language: 'eng',
-    format: 'png8',
-    size: '256'
-});
-
-var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});*/
 
 function getLastCoords() {
     var lastcords = localStorage.getItem("lastcoords");
@@ -59,7 +41,7 @@ var map = L.map('map', {
 map.attributionControl.setPrefix("")
 L.control.layers(baselayers, overlays).addTo(map);
 
-baselayers["Map"].addTo(map);
+baselayers["Gray"].addTo(map);
 
 var MapSystem = function() {
     this.map = map;

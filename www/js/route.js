@@ -32,19 +32,22 @@ Route.prototype = {
         }
         var self = this;
         this.separtePathByRoadType(coords.coordinates).forEach(function(path) {
-                self.paths.push(path);
-            });
-        console.log(this.paths);
+            self.paths.push(path);
+        });
     },
     loadOnMap: function(withMarks) {
         mapSystem.clearMapLayers();
-        console.log(this.paths.length);
         for (var i = 0; i < this.paths.length; i++) {
             mapSystem.addLinesFromGeoJson(this.paths[i]);
         }
-        if (withMarks)
             for (i = 0; i < this.points.length; i++) {
-                mapSystem.addMarker(this.points[i], routingMarkIcon);
+                if (i == 0)
+                    mapSystem.addMarker(this.points[0], startMarkIcon);
+                else if (i == this.points.length - 1)
+                    mapSystem.addMarker(this.points[i], endMarkIcon);
+                else
+                    if (withMarks)
+                        mapSystem.addMarker(this.points[i], routingMarkIcon);
             }
     },
     loadOnMapForNavigation: function() {
@@ -85,9 +88,7 @@ Route.prototype = {
         var m = JSON.parse(memento);
         this.name = m.name;
         this.points = m.points;
-        console.log(m.paths);
         this.paths = m.paths;
-        console.log(this.paths);
     },
     saveInTemporary: function() {
         localStorage.setItem("temporary", routingSystem.route.hydrate());
