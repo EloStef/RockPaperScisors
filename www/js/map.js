@@ -41,7 +41,7 @@ var map = L.map('map', {
 map.attributionControl.setPrefix("")
 L.control.layers(baselayers, overlays).addTo(map);
 
-baselayers["Gray"].addTo(map);
+baselayers["Map"].addTo(map);
 
 var MapSystem = function() {
     this.map = map;
