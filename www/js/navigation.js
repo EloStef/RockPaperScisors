@@ -59,8 +59,8 @@ var NavigationSystem = function() {
     this.initAmount = 0;
     this.route = new Route();
 
-    map.addControl(new label(id = "speedField", value = "Speed: 0"));
-    map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
+    //map.addControl(new label(id = "speedField", value = "Speed: 0"));
+    //map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
     newButton(
         '<img id="navimg" style="margin: -1px 0px 0px -5px;" src="img/navigationButtonOff.png">',
         function() {
@@ -127,9 +127,9 @@ NavigationSystem.prototype = {
     successGeoLocate: function(pos) {
         setNavigationButtonImage("img/navigationButtonOn.png");
         if (pos.coords.speed != undefined)
-            document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
+            document.getElementById("speedField").value = (pos.coords.speed).toFixed(0) + " km/h";
         if (pos.coords.accuracy != undefined)
-            document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
+            document.getElementById("accuracyField").value = pos.coords.accuracy;
 
         if ((pos.coords.latitude == this.position.lat && pos.coords.longitude == this.position.lng))
             return;
@@ -151,6 +151,9 @@ NavigationSystem.prototype = {
         console.log(this.distance(this.position.lat, this.position.lng, 52.2318, 21.0060, "K"));
     },
     errorGeoLocate: function(error) {
+        document.getElementById("speedField").value = "-";
+        document.getElementById("accuracyField").value = "-";
+
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();
         gpsDialog();//Nie wiem czemu tu dwa były

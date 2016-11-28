@@ -1,13 +1,29 @@
-html,
-body,
-.map {
-    margin: 0;
+body {
     padding: 0;
-    width: 100%;
-    height: 100%;
+    margin: 0;
+}
+
+html, body, {
+	height: 100%;
+}
+
+.map {
+    height: 90%;
+}
+
+.nav {
+    height: 10%;
+    margin-top: -3px;
+    display: flex; 
+	align-items: center;
+	justify-content: center;
 }
 
 
-.close {
-	visibility: hidden;
+.infoElement{
+	margin-top: 3px;
+	margin-right: 8px;
 }
+
+.w3-input{display:block;border:none;border-bottom:1px solid #808080;width:90px}
+.w3-label{color:#009688}.w3-input:not(:valid)~.w3-validate{color:#f44336}

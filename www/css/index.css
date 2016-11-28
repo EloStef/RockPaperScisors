@@ -11,7 +11,7 @@ body {
   	text-align: center;
 }
 
-a:link, a:visited {
+/*a:link, a:visited {
     background-color: #008CBA;
     color: white;
     padding: 14px 14px;
@@ -22,6 +22,31 @@ a:link, a:visited {
     height: 30px;
     width: 50%;
     margin-top: 4px;
+}
+
+
+a:hover, a:active {
+    background-color: #87CEFA;
+}*/
+
+.text{
+    color: #009688;
+    font-family: "Sans-serif";
+    margin-left: 14px;
+    font-size: 20px;
+}
+
+a:link, a:visited {
+    padding-bottom: 14px;
+    padding-top: 14px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    /*margin: auto;*/
+    height: 30px;
+    width: 100%;
+
+    /*border:none;border-bottom:1px solid #009688;*/
 }
 
 
