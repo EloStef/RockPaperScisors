@@ -1,6 +1,7 @@
 body {
     padding: 0;
     margin: 0;
+    background-color: #282828;
 }
 
 html, body, {
@@ -25,5 +26,5 @@ html, body, {
 	margin-right: 8px;
 }
 
-.w3-input{display:block;border:none;border-bottom:1px solid #808080;width:90px}
-.w3-label{color:#009688}.w3-input:not(:valid)~.w3-validate{color:#f44336}
+.w3-input{color: white;background-color: #282828;display:block;border:none;border-bottom:1px solid #808080;width:90px}
+.w3-label{font-weight: bold;color:#009688}.w3-input:not(:valid)~.w3-validate{color:#f44336}

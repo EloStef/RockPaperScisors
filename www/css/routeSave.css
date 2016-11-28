@@ -1,16 +1,36 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #282828;
+}
+
 .input {
     height: 30px;
     padding: 14px 14px;
     border:none;
-    border-bottom:1px solid #808080;
+    background: #282828;
+    border-bottom:1px solid black;
     width: 90%;
+    color: #009688;
+    font-size: 16px;
+}
+
+.input:hover, .input:active {
+}
+
+.input:focus {
+    outline:0;
+    border-bottom:1px solid #009688;
 }
 
 button {
     margin-top: 4px;
     border: none;
     color: #009688;
-    background-color: white; /* Green */
+    background-color: #282828; /* Green */
     padding: 14px 14px;
     text-align: left;
     text-decoration: none;
@@ -23,7 +43,7 @@ button {
 }
 
 button:hover, button:active {
-    background-color: #87CEFA;
+    background-color: #30705E;
 }
 
 button:focus {

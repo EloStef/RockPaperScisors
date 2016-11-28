@@ -1,15 +1,3 @@
-$(document).ready(function() {
-    $(".nav").toggle();
-    $(".menubtn").click(function() {
-        if ($(".nav").css('display') == 'none') {
-            $(".map").css("height", "80%");
-        } else {
-            $(".map").css("height", "95%");
-        }
-        $(".nav").toggle();
-    });
-});
-
 var RoutingSystem = function() {
     this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
     this.graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
