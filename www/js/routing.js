@@ -56,6 +56,7 @@ RoutingSystem.prototype = {
                     //mapSystem.addLinesFromGeoJson(data.paths[0].points);
                     self.route.addNewPoint(clickEvent.latlng);
                     self.route.addNewPath(data.paths[0].points, data.paths[0].instructions);
+                    console.log(self.route.paths);
                     mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
                     self.route.loadOnMap(true);
                     self.routeCareTaker.add(self.route.hydrate());

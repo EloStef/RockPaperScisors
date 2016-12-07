@@ -52,8 +52,8 @@ var lineMainCycleRoad = {
     "opacity": 0.9
 };
 
-var lineSideCycleRoad = {
-    "color": "#ff7800",
+var lineMainDrivenRoad = {
+    "color": "#000000",
     "weight": 3,
     "opacity": 0.9
 };

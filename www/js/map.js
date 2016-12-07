@@ -70,6 +70,8 @@ MapSystem.prototype = {
             style: function(feature) {
                 if (feature.geometry.road_type == "cycleway")
                     return lineMainCycleRoad;
+                if (feature.geometry.road_type == "driven")
+                    return lineMainDrivenRoad;
                 return lineMainNormalRoad;
             }
         });

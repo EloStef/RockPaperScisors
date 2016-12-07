@@ -1,7 +1,13 @@
-var Route = function() {
+var Route = function(routeName) {
     this.points = [];
     this.paths = [];
     this.i = 0;
+    //Jezeli ladujemy jakas 
+    console.log("laduje droge z URL" + routeName);
+    if(routeName != "" && routeName != undefined){
+        this.dehydrate(localStorage.getItem(routeName));
+        this.loadOnMap(false);
+    }
 };
 
 Route.prototype = {
@@ -30,6 +36,26 @@ Route.prototype = {
                 coords.coordinates[j].road_type = road_type;
             }
         }
+        for (var i = 0; i < coords.coordinates.length; i++) {
+            if (i == 0 && this.points.length > 2) {
+                coords.coordinates[i][2] =
+                    distance(coords.coordinates[i][0],
+                        coords.coordinates[i][1],
+                        this.points[this.points.length - 2].lng,
+                        this.points[this.points.length - 2].lat, 
+                        "K"
+                    );
+            } else if(i == 0) {
+                coords.coordinates[i][2] = 0;
+            } else {
+                coords.coordinates[i][2] =
+                distance(coords.coordinates[i][0],
+                    coords.coordinates[i][1],
+                    coords.coordinates[i - 1][0],
+                    coords.coordinates[i - 1][1], "K"
+                );
+            }
+        }
         var self = this;
         this.separtePathByRoadType(coords.coordinates).forEach(function(path) {
             self.paths.push(path);
@@ -40,25 +66,39 @@ Route.prototype = {
         for (var i = 0; i < this.paths.length; i++) {
             mapSystem.addLinesFromGeoJson(this.paths[i]);
         }
-            for (i = 0; i < this.points.length; i++) {
-                if (i == 0)
-                    mapSystem.addMarker(this.points[0], startMarkIcon);
-                else if (i == this.points.length - 1)
-                    mapSystem.addMarker(this.points[i], endMarkIcon);
-                else
-                    if (withMarks)
-                        mapSystem.addMarker(this.points[i], routingMarkIcon);
-            }
-    },
-    loadOnMapForNavigation: function() {
-        var navigationPath = [];
-        for (i = 0; i < this.paths.length; i++) {
-            navigationPath = navigationPath.concat(this.paths[i].coordinates);
+        for (i = 0; i < this.points.length; i++) {
+            if (i == 0)
+                mapSystem.addMarker(this.points[0], startMarkIcon);
+            else if (i == this.points.length - 1)
+                mapSystem.addMarker(this.points[i], endMarkIcon);
+            else
+            if (withMarks)
+                mapSystem.addMarker(this.points[i], routingMarkIcon);
         }
-        this.paths[0].coordinates = navigationPath;
-        this.paths = new Array(this.paths[0]);
-        this.loadOnMap(false);
-        mapSystem.addLinesFromGeoJson(this.paths[0], lineMainCycleRoad);
+    },
+    loadOnMapForNavigation: function(lat, lng) {
+        mapSystem.clearMapLayers();
+        var currentCords = this.getNextPointOfNavigationByPos(lat, lng);
+        if(currentCords != undefined){
+            this.paths[currentCords[0]].coordinates[currentCords[1]].road_type = "driven";
+            var tempPath = [];
+            var self = this;
+            console.log(this.paths);
+            this.paths.forEach(function (item, index) {
+                self.separtePathByRoadType(item.coordinates).forEach(function(path) {
+                    tempPath.push(path);
+                });
+                console.log(tempPath);
+            });
+            this.paths = tempPath;
+        }
+
+        for (var i = 0; i < this.paths.length; i++) {
+            mapSystem.addLinesFromGeoJson(this.paths[i]);
+        }
+
+        mapSystem.addMarker(this.points[0], startMarkIcon);
+        mapSystem.addMarker(this.points[this.points.length - 1], endMarkIcon);
     },
     separtePathByRoadType: function(coords) {
         var linesByRoadType = [1, 1];
@@ -80,6 +120,38 @@ Route.prototype = {
         linesByRoadType.pop();
         return linesByRoadType;
     },
+    getNextPointOfNavigationByPos: function(lat, lon){
+        var theSmallestError = minError;
+        var point;
+        var paths = this.paths;
+        this.paths.forEach(function (item, index) {
+            item.coordinates.forEach(function (coord, indexCoord) {
+                var tempDist = 1000;
+                if(index > 0 && indexCoord == 0){
+                    console.log(lat + " "  + lon + " "  + coord[0] + " "  + coord[1]);
+                    tempDist = 
+                    distance(lon, lat, 
+                        paths[index - 1].coordinates[paths[index - 1].coordinates.length - 1][0],
+                        paths[index - 1].coordinates[paths[index - 1].coordinates.length - 1][1],
+                        "K")
+                    + distance(lon, lat, coord[0], coord[1], "K");
+                }
+                else if(indexCoord > 0){
+                    tempDist = 
+                    distance(lon, lat, 
+                        paths[index].coordinates[indexCoord - 1][0],
+                        paths[index].coordinates[indexCoord - 1][1],
+                        "K")
+                    + distance(lon, lat, coord[0], coord[1], "K");
+                }
+                if(tempDist - coord[2] < theSmallestError){
+                    point = [index, indexCoord];
+                    theSmallestError = tempDist - coord[2];
+                }
+            })
+        });
+    return point;
+    }, 
     hydrate: function() {
         var memento = JSON.stringify(this);
         return memento;
@@ -97,5 +169,5 @@ Route.prototype = {
     saveFromTemporary: function(name) {
         var route = localStorage.getItem("temporary");
         localStorage.setItem("N" + name, route);
-    }
+    },
 }
