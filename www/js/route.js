@@ -2,9 +2,8 @@ var Route = function(routeName) {
     this.points = [];
     this.paths = [];
     this.i = 0;
-    //Jezeli ladujemy jakas 
-    console.log("laduje droge z URL" + routeName);
-    if(routeName != "" && routeName != undefined){
+
+    if (routeName != "" && routeName != undefined) {
         this.dehydrate(localStorage.getItem(routeName));
         this.loadOnMap(false);
     }
@@ -42,18 +41,18 @@ Route.prototype = {
                     distance(coords.coordinates[i][0],
                         coords.coordinates[i][1],
                         this.points[this.points.length - 2].lng,
-                        this.points[this.points.length - 2].lat, 
+                        this.points[this.points.length - 2].lat,
                         "K"
                     );
-            } else if(i == 0) {
+            } else if (i == 0) {
                 coords.coordinates[i][2] = 0;
             } else {
                 coords.coordinates[i][2] =
-                distance(coords.coordinates[i][0],
-                    coords.coordinates[i][1],
-                    coords.coordinates[i - 1][0],
-                    coords.coordinates[i - 1][1], "K"
-                );
+                    distance(coords.coordinates[i][0],
+                        coords.coordinates[i][1],
+                        coords.coordinates[i - 1][0],
+                        coords.coordinates[i - 1][1], "K"
+                    );
             }
         }
         var self = this;
@@ -76,29 +75,90 @@ Route.prototype = {
                 mapSystem.addMarker(this.points[i], routingMarkIcon);
         }
     },
-    loadOnMapForNavigation: function(lat, lng) {
+    loadOnMapForNavigation: function(lat, lng, dist) {
         mapSystem.clearMapLayers();
-        var currentCords = this.getNextPointOfNavigationByPos(lat, lng);
-        if(currentCords != undefined){
-            this.paths[currentCords[0]].coordinates[currentCords[1]].road_type = "driven";
-            var tempPath = [];
-            var self = this;
-            console.log(this.paths);
-            this.paths.forEach(function (item, index) {
-                self.separtePathByRoadType(item.coordinates).forEach(function(path) {
-                    tempPath.push(path);
-                });
-                console.log(tempPath);
-            });
-            this.paths = tempPath;
+
+        this.nextPointId = this.getNextPointOfNavigationByPos(lat, lng, dist);
+
+        if (this.nextPointId != undefined) {
+            //tworzenie linii przejechanej trasy
+            this.drivenPath = { coordinates: [], road_type: "driven", type: "LineString" };
+            for (i = 0; i <= this.nextPointId[0]; i++) {
+                var jLength = this.paths[i].coordinates.length;
+                if (i == this.nextPointId[0]) {
+                    jLength = this.nextPointId[1];
+                }
+                for (j = 0; j < jLength; j++) {
+                    this.drivenPath.coordinates.push(this.paths[i].coordinates[j]);
+                }
+            }
+            this.lastPoint = this.drivenPath.coordinates[this.drivenPath.coordinates.length - 1];
         }
 
         for (var i = 0; i < this.paths.length; i++) {
             mapSystem.addLinesFromGeoJson(this.paths[i]);
         }
 
+        
+
         mapSystem.addMarker(this.points[0], startMarkIcon);
         mapSystem.addMarker(this.points[this.points.length - 1], endMarkIcon);
+
+        this.loadOnMap(false);
+        mapSystem.addLinesFromGeoJson(this.drivenPath);
+
+        if (this.nextPointId == undefined)
+            return;
+        
+        //this.printLinesBetweenLastAndNextPoint();
+        this.runPrintingLinesFromLastToNextPoint();
+    },
+    runPrintingLinesFromLastToNextPoint: function() {
+        /*if (this.intervalPrintingFromLastToNextPoint == undefined || this.intervalPrintingFromLastToNextPoint == null)
+            clearInterval(this.intervalPrintingFromLastToNextPoint);
+        
+        this.intervalPrintingI = 0;
+        clearInterval(this.intervalPrintingFromLastToNextPoint);*/
+        if (this.intervalPrintingFromLastToNextPoint != undefined)
+            return;
+
+        this.intervalPrintingFromLastToNextPoint =
+            window.setInterval(this.printLinesBetweenLastAndNextPoint.bind(this), 100);
+
+    },
+    printLinesBetweenLastAndNextPoint: function() {
+        this.intervalPrintingI += 1;
+        if (this.nextPointId[0] == undefined) //|| this.intervalPrintingI > 20)
+            return;
+            //clearInterval(this.intervalPrintingFromLastToNextPoint);
+
+        var coords = [
+            navigationSystem.naviMarker.getLatLng().lng,
+            navigationSystem.naviMarker.getLatLng().lat
+        ];
+        this.lineFromLastPoint = {
+            coordinates: [],
+            road_type: "driven",
+            type: "LineString"
+        };
+        this.lineFromLastPoint.coordinates.push(coords);
+        this.lineFromLastPoint.coordinates.push(this.lastPoint);
+
+        this.lineToNextPoint = {
+            coordinates: [],
+            road_type: this.paths[this.nextPointId[0]].road_type,
+            type: "LineString"
+        };
+        this.lineToNextPoint.coordinates.push(coords);
+        this.lineToNextPoint.coordinates.push(this.paths[this.nextPointId[0]].coordinates[this.nextPointId[1]]);
+
+        if (this.mapLineFromLastPoint != undefined)
+            this.mapLineFromLastPoint.clearLayers();
+        if (this.mapLineToNextPoint != undefined)
+            this.mapLineToNextPoint.clearLayers();
+
+        this.mapLineFromLastPoint = mapSystem.addLinesFromGeoJson(this.lineFromLastPoint);
+        this.mapLineToNextPoint = mapSystem.addLinesFromGeoJson(this.lineToNextPoint);
     },
     separtePathByRoadType: function(coords) {
         var linesByRoadType = [1, 1];
@@ -120,38 +180,63 @@ Route.prototype = {
         linesByRoadType.pop();
         return linesByRoadType;
     },
-    getNextPointOfNavigationByPos: function(lat, lon){
-        var theSmallestError = minError;
+    getNextPointOfNavigationByPos: function(lat, lon, direction) {
+        direction = MoveDegrees(direction);
+        var theSmallestDirectionError = minError;
+        var theSmallestUniversalError = minError;
         var point;
         var paths = this.paths;
-        this.paths.forEach(function (item, index) {
-            item.coordinates.forEach(function (coord, indexCoord) {
+        var directionState = false;
+        this.paths.forEach(function(item, index) {
+            item.coordinates.forEach(function(coord, indexCoord) {
                 var tempDist = 1000;
-                if(index > 0 && indexCoord == 0){
-                    console.log(lat + " "  + lon + " "  + coord[0] + " "  + coord[1]);
-                    tempDist = 
-                    distance(lon, lat, 
-                        paths[index - 1].coordinates[paths[index - 1].coordinates.length - 1][0],
-                        paths[index - 1].coordinates[paths[index - 1].coordinates.length - 1][1],
-                        "K")
-                    + distance(lon, lat, coord[0], coord[1], "K");
+                var ind = 0;
+                var coordIndex = 0;
+
+                if (index > 0 && indexCoord == 0) {
+                    ind = index - 1;
+                    coordIndex = paths[index - 1].coordinates.length - 1;
+
+                } else if (indexCoord > 0) {
+                    ind = index;
+                    coordIndex = indexCoord - 1
                 }
-                else if(indexCoord > 0){
-                    tempDist = 
-                    distance(lon, lat, 
-                        paths[index].coordinates[indexCoord - 1][0],
-                        paths[index].coordinates[indexCoord - 1][1],
-                        "K")
-                    + distance(lon, lat, coord[0], coord[1], "K");
+                tempDist = distance(lon, lat,
+                    paths[ind].coordinates[coordIndex][0],
+                    paths[ind].coordinates[coordIndex][1],
+                    "K") + distance(lon, lat, coord[0], coord[1], "K");
+
+                var distError = tempDist - coord[2];
+
+                if (distError < theSmallestDirectionError) {
+                    var coord2 = { lng: paths[ind].coordinates[coordIndex][0], lat: paths[ind].coordinates[coordIndex][1] };
+                    var coord1 = { lng: paths[index].coordinates[indexCoord][0], lat: paths[index].coordinates[indexCoord][1] };
+                    var angleCoords = MoveDegrees(angleFromCoordinate(coord1, coord2));
+                    if (Math.abs(angleCoords - direction) < 60) {
+                        console.log("siedzi w kierunku");
+                        point = [index, indexCoord];
+                        theSmallestDirectionError = distError;
+                        directionState = true;
+                    }
                 }
-                if(tempDist - coord[2] < theSmallestError){
+                if(!directionState && distError < theSmallestUniversalError){
+                    console.log("bez kierunku");
                     point = [index, indexCoord];
-                    theSmallestError = tempDist - coord[2];
+                    theSmallestUniversalError = distError;
                 }
             })
         });
-    return point;
-    }, 
+        this.correctDirection = directionState;
+        return point;
+    },
+    isDirectionCorrect: function() {
+        if(this.correctDirection == undefined)
+            return false;
+        return this.correctDirection;
+    },
+    getLastCoords: function() {
+        return this.paths[this.paths.length - 1].coordinates[this.paths[this.paths.length - 1].coordinates.length - 1];
+    },
     hydrate: function() {
         var memento = JSON.stringify(this);
         return memento;

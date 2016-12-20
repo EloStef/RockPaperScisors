@@ -1,9 +1,11 @@
 var naviPosition = function() {
 	this.coords;
+	this.amountOfPushedCoords = 0;
 }
 
 naviPosition.prototype = {
 	pushCoord: function(latlng) {
+		this.amountOfPushedCoords += 1;
 		if(this.coords == undefined){
 			this.coords = [latlng, latlng, latlng];
 			return;
@@ -39,5 +41,10 @@ naviPosition.prototype = {
 	getDirection: function(){
 		var newCoord = this.getAverageFromLastPoints();
 		return angleFromCoordinate(this.coords[0], newCoord);
+	},
+	isDirectionSet: function(){
+		if(this.amountOfPushedCoords < 3)
+			return false;
+		return true;
 	}
 }

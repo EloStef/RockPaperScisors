@@ -39,6 +39,8 @@ var NavigationSystem = function() {
         'topleft',
         'navigationBtn');
 
+    mapSystem.map.addControl(new wrongDirectionImg(id = "wrongWayImg"));
+
     var lastCoords = getLastCoords();
     this.naviMarker = L.Marker.movingMarker([
         [lastCoords[0], lastCoords[1]],
@@ -116,17 +118,16 @@ NavigationSystem.prototype = {
         if(this.naviPosition.pushCoordDistanceIfHigher(
             new L.latLng(pos.coords.latitude, pos.coords.longitude),
             0.01)){
-                this.bearingTarget = (180 - this.naviPosition.getDirection()) * (-1);
+                this.bearingTarget = (180 - this.naviPosition.getDirection());
         }
-            //this.bearingTarget = 180 - angleFromCoordinate(this.position, this.positionBefore);
 
         this.bearingTarget = MoveDegrees(this.bearingTarget);
         this.bearingNow = MoveDegrees(this.bearingNow);
 
-        setLastCoords(pos.coords.latitude, pos.coords.longitude);
+        this.isRouteDone();
+        this.wrongDirection();
 
-        //this.route.loadOnMapForNavigation(pos.coords.latitude, pos.coords.longitude);
-        this.route.loadOnMap(false);
+        this.route.loadOnMapForNavigation(pos.coords.latitude, pos.coords.longitude, this.naviPosition.getDirection());
     },
     errorGeoLocate: function(error) {
         document.getElementById("speedField").value = "-";
@@ -137,6 +138,22 @@ NavigationSystem.prototype = {
         gpsDialog();//Nie wiem czemu tu dwa były
         setNavigationButtonImage("img/navigationButtonOff.png");
     },
+    wrongDirection: function() {
+        if(this.naviPosition.isDirectionSet()){
+            if(this.route.isDirectionCorrect()){
+                activveWrongWayImg(false);
+                return;
+            }
+        }
+        activveWrongWayImg(true);
+    },
+    isRouteDone: function() {
+        var endPoint = this.route.getLastCoords();
+        if(distance(this.position.lat, this.position.lng, endPoint[1], endPoint[0], "K") < 0.01){
+            routeDoneDialog();
+            navigator.geolocation.clearWatch(this.watchGeoLocation);
+        }
+    },
     gpsDialogYes: function() {
         $(".leaflet-modal").hide();
         cordova.plugins.diagnostic.switchToLocationSettings();
@@ -144,6 +161,9 @@ NavigationSystem.prototype = {
     gpsDialogNo: function() {
         $(".leaflet-modal").hide();
         setNavigationButtonImage("img/navigationButtonOff.png");
+    },
+    getNavigationIconPosition: function(){
+        return this.naviMarker;
     }
 }
 
