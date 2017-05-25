@@ -14,7 +14,6 @@
         permission on your app, which PhoneGap requires.
     -->
     <preference name="permissions" value="none" />
-    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <!-- Customize your app and platform with the preference element. -->
     <preference name="orientation" value="landscape" />
     <!-- all: default means both landscape and portrait are enabled -->
