@@ -149,7 +149,7 @@ NavigationSystem.prototype = {
     },
     isRouteDone: function() {
         var endPoint = this.route.getLastCoords();
-        if(distance(this.position.lat, this.position.lng, endPoint[1], endPoint[0], "K") < 0.01){
+        if(distance(this.position.lat, this.position.lng, endPoint[1], endPoint[0], "K") < 0.02){
             routeDoneDialog();
             navigator.geolocation.clearWatch(this.watchGeoLocation);
         }

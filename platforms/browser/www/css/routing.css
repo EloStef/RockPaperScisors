@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: #008CBA; /* Green */
+    background-color: #282828;
 }
 
 html, body, {
@@ -9,36 +9,29 @@ html, body, {
 }
 
 .map {
-    height: 95%;
+    height: 85%;
 }
 
-.menubtn {
-    height: 5%;
-    margin: 0px 0px -1px 0px;
-}
-
-.navbtn {
-    height: 5%;
-    margin: 0px 0px -1px 0px;
-}
-
-.navbtn {
-    border: none;
-    color: white;
-    background-color: #008CBA;
-    padding: 5px 32px;
+#nav {
+    height: 15%;
     text-align: center;
+  display: inline-block;
+}
+
+.infoElement{
+    height: 99%;
+    padding: 0px 10px;
     text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    width: 100%;
-    cursor: pointer;
+    border: none;
+    background-color: #282828;
 }
 
-.navbtn:hover, .navbtn:active {
-    background-color: #87CEFA;
+.infoElement:hover, .infoElement:active {
+    background-color: #30705E;
 }
 
-.navbtn:focus {
+.infoElement:focus {
     outline:0;
-};
+}
+
+.w3-label{font-weight: bold;color:#009688}

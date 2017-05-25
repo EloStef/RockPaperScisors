@@ -17,14 +17,20 @@
         <button type="button" onclick="routingSystem.redo()">REDO</button>-->
         <div id="map" class="map"></div>
         <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
-        <div>
-            <div class="nav">
-                <button type="button" class="navbtn" onclick="routingSystem.undo()">Undo</button>
-                <button type="button" class="navbtn" onclick="routingSystem.redo()">Redo</button>
-                <button type="button" class="navbtn" onclick="routingSystem.route.saveInTemporary()">Save</button>
-            </div>
+        <div id="nav">
+            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.undo()">
+            <img src="img/undo.png"><br/>
+            <label class="w3-label">Undo</label>
+            </button>
+            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.redo()">
+            <img src="img/redo.png"><br/>
+            <label class="w3-label">Redo</label>
+            </button>
+            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.route.saveInTemporary()">
+            <img src="img/save.png"><br/>
+            <label class="w3-label">Save</label>
+            </button>
         </div>
-        <button class="menubtn navbtn" type="button" onclick="">...</button>
     </div>
     <script type="text/javascript" src="lib/jquery/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery-ui.min.js"></script>
@@ -33,6 +39,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/mapElementsStyle.js"></script>
+    <script type="text/javascript" src="js/Utils/Math.js"></script>
     <script type="text/javascript" src="js/map.js"></script>
     <script type="text/javascript" src="js/careTaker.js"></script>
     <script type="text/javascript" src="js/route.js"></script>

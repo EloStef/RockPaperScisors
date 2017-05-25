@@ -143,6 +143,38 @@ var routeDoneDialog = function() {
     });
 }
 
+function hideModal() {
+        $(".leaflet-modal").hide();
+    }
+
+var emptyRouteDialog = function() {
+    $(".leaflet-modal").show();
+    map.fire('modal', {
+        content: '<b>Create route before save.</b><div style="text-align: center;"><button style="margin-right: 5px" onclick="hideModal()">Ok</button></div>', // HTML string
+        width: 100,
+        height: 100,
+        closeTitle: 'close', 
+        zIndex: 10000, 
+        transitionDuration: 300, 
+        template: '{content}', 
+
+        onShow: function(evt) {
+            var modal = evt.modal;
+        },
+        onHide: function(evt) {
+            var modal = evt.modal;
+            $(".leaflet-modal").hide();
+        },
+
+        OVERLAY_CLS: 'overlay', 
+        MODAL_CLS: 'modal', 
+        MODAL_CONTENT_CLS: 'modal-content', 
+        INNER_CONTENT_CLS: 'modal-inner', 
+        SHOW_CLS: 'show', 
+        CLOSE_CLS: 'close' 
+    });
+}
+
 function goToMenu(){
     window.location = "index.html";
 }

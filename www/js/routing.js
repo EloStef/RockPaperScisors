@@ -1,6 +1,5 @@
 var RoutingSystem = function() {
-    this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
-    this.graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
+    this.geoSystem = graphHopperSystem;
 
     this.route = new Route();
 
@@ -13,14 +12,6 @@ var RoutingSystem = function() {
 };
 
 RoutingSystem.prototype = {
-
-    graphhopperPointString: function(latlng) {
-        return "point=" + latlng.lat + "," + latlng.lng;
-    },
-
-    getGraphhopperUrl: function(point1, point2) {
-        return this.graphhopperPrefix + point1 + '&' + point2 + this.graphhopperSuffix;
-    },
 
     undo: function() {
         var memento = this.routeCareTaker.undo();
@@ -50,8 +41,7 @@ RoutingSystem.prototype = {
         } else {
             var self = this;
             $.getJSON(
-                this.getGraphhopperUrl(this.graphhopperPointString(self.route.getLastPoint()),
-                    this.graphhopperPointString(clickEvent.latlng)),
+                this.geoSystem.getUrl(self.route.getLastPoint(), clickEvent.latlng),
                 function(data) {
                     //mapSystem.addLinesFromGeoJson(data.paths[0].points);
                     self.route.addNewPoint(clickEvent.latlng);

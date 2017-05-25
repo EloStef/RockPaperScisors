@@ -5,6 +5,23 @@ var blackosmUrl = 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
         attribution: blackosmAttrib
     });
 
+var baselayers = {
+    "Map": L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: ''
+    }),
+    "Gray": L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: ''
+    }),
+    "Earth": L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '',
+    maxZoom: 18,
+    })
+}
+
+var overlays = {};
+
 function getLastCoords() {
     var lastcords = localStorage.getItem("lastcoords");
     if (lastcords == null)
@@ -19,8 +36,12 @@ function setLastCoords(lat, lng) {
 var map = L.map('map', {
         rotate: true
     })
-    .setView([getLastCoords()[0], getLastCoords()[1]], getLastCoords()[2])
-    .addLayer(blackosm);
+    .setView([getLastCoords()[0], getLastCoords()[1]], getLastCoords()[2]);
+
+map.attributionControl.setPrefix("")
+L.control.layers(baselayers, overlays).addTo(map);
+
+baselayers["Map"].addTo(map);
 
 var MapSystem = function() {
     this.map = map;
@@ -44,8 +65,16 @@ MapSystem.prototype = {
         this.markersLayer.addLayer(newMarker);
         return newMarker;
     },
-    addLinesFromGeoJson: function(points, style) {
-        var newLines = L.geoJson(points, { style: style });
+    addLinesFromGeoJson: function(points) {
+        var newLines = L.geoJson(points, {
+            style: function(feature) {
+                if (feature.geometry.road_type == "cycleway")
+                    return lineMainCycleRoad;
+                if (feature.geometry.road_type == "driven")
+                    return lineMainDrivenRoad;
+                return lineMainNormalRoad;
+            }
+        });
         this.linesLayer.addLayer(newLines);
         return newLines;
     },
@@ -58,6 +87,9 @@ MapSystem.prototype = {
     clearMapLayers: function() {
         this.clearMarkers();
         this.clearLines();
+    },
+    switchBaseMap: function() {
+
     }
 }
 

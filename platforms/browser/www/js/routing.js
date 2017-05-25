@@ -1,16 +1,3 @@
-$(document).ready(function() {
-    $(".nav").toggle();
-    $(".menubtn").click(function() {
-        if ($(".nav").css('display') == 'none') {
-            $(".map").css("height", "80%");
-        } else {
-            $(".map").css("height", "95%");
-        }
-        $(".nav").toggle();
-    });
-});
-//b.addTo(map);
-
 var RoutingSystem = function() {
     this.graphhopperPrefix = "https://graphhopper.com/api/1/route?";
     this.graphhopperSuffix = "&vehicle=bike&debug=true&key=57b19165-fee6-425d-962e-b994570e34f0&type=json&points_encoded=false";
@@ -40,7 +27,7 @@ RoutingSystem.prototype = {
         if (memento) {
             this.route.dehydrate(memento);
             mapSystem.clearMapLayers();
-            this.route.loadOnMap();
+            this.route.loadOnMap(true);
         }
         return;
     },
@@ -50,7 +37,7 @@ RoutingSystem.prototype = {
         if (memento) {
             this.route.dehydrate(memento);
             mapSystem.clearMapLayers();
-            this.route.loadOnMap();
+            this.route.loadOnMap(true);
         }
         return;
     },
@@ -58,7 +45,7 @@ RoutingSystem.prototype = {
     createNewRoute: function(clickEvent) {
         if (this.route.getLastPoint() == null) {
             this.route.addNewPoint(clickEvent.latlng);
-            mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
+            this.route.loadOnMap(true);
             this.routeCareTaker.add(this.route.hydrate());
         } else {
             var self = this;
@@ -66,11 +53,12 @@ RoutingSystem.prototype = {
                 this.getGraphhopperUrl(this.graphhopperPointString(self.route.getLastPoint()),
                     this.graphhopperPointString(clickEvent.latlng)),
                 function(data) {
-                    mapSystem.addLinesFromGeoJson(data.paths[0].points, lineStyle);
+                    //mapSystem.addLinesFromGeoJson(data.paths[0].points);
                     self.route.addNewPoint(clickEvent.latlng);
-                    self.route.addNewPath(data.paths[0].points);
+                    self.route.addNewPath(data.paths[0].points, data.paths[0].instructions);
+                    console.log(self.route.paths);
                     mapSystem.addMarker(clickEvent.latlng, routingMarkIcon);
-
+                    self.route.loadOnMap(true);
                     self.routeCareTaker.add(self.route.hydrate());
                 }
             );

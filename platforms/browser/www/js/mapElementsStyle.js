@@ -19,35 +19,65 @@ function setNavigationButtonImage(img) {
     $("#navimg").attr("src", img);
 }
 
-var label = L.Control.extend({
+var wrongDirectionImg = L.Control.extend({
 
     options: {
-        position: 'topright'
+        position: 'bottomright'
     },
 
     onAdd: function(map) {
-        var container = L.DomUtil.create('input', 'leaflet-bar leaflet-control'); // leaflet-control-custom
+        var container = L.DomUtil.create('img', 'leaflet-bar leaflet-control leaflet-control-custom');
 
-        container.style.background = "rgba(100,100,100,0.4)";
-        container.style.backgroundSize = "90px 20px";
+        container.style.background = "rgba(0,0,0,0)";
         container.style.width = '90px';
-        container.style.height = '20px';
-        container.style.border = '0px';
+        container.style.height = '90px';
+        container.style.borderStyle = 'none';
+        container.style.boxShadow = '0 0px 0px rgba(0,0,0,0)';
+        container.src = "img/wrongway.png";
         container.disabled = "true";
-        container.value = value;
         container.id = id;
         return container;
     }
 });
 
-var lineStyle = {
+function activveWrongWayImg(active) {
+    if(active){
+        $("#wrongWayImg").show();
+        return;
+    }
+    $("#wrongWayImg").hide();
+}
+
+var lineMainNormalRoad = {
     "color": "#ff7800",
-    "weight": 4,
-    "opacity": 0.65
+    "weight": 5,
+    "opacity": 0.9
+};
+
+var lineMainCycleRoad = {
+    "color": "#ADFF2F",
+    "weight": 5,
+    "opacity": 0.9
+};
+
+var lineMainDrivenRoad = {
+    "color": "#FF0000",
+    "weight": 6,
+    "opacity": 0.7
 };
 
 var routingMarkIcon = L.icon({
     iconUrl: 'img/routingMark.png',
+    iconAnchor: [6, 6]
+});
+
+var startMarkIcon = L.icon({
+    iconUrl: 'img/startMark.png',
+    iconAnchor: [6, 6]
+});
+
+var endMarkIcon = L.icon({
+    iconUrl: 'img/endMark.png',
     iconAnchor: [6, 6]
 });
 
@@ -82,4 +112,37 @@ var gpsDialog = function() {
         SHOW_CLS: 'show', 
         CLOSE_CLS: 'close' 
     });
+}
+
+var routeDoneDialog = function() {
+    $(".leaflet-modal").show();
+    map.fire('modal', {
+        content: '<b>Gps</b><div style="text-align: center;">Congratulations, you finnished your route.<br><button style="margin-right: 5px" onclick="goToMenu()">Ok</button></div>', // HTML string
+        width: 100,
+        height: 100,
+        closeTitle: 'close', 
+        zIndex: 10000, 
+        transitionDuration: 300, 
+        template: '{content}', 
+
+        onShow: function(evt) {
+            var modal = evt.modal;
+        },
+        onHide: function(evt) {
+            goToMenu();
+            var modal = evt.modal;
+            $(".leaflet-modal").hide();
+        },
+
+        OVERLAY_CLS: 'overlay', 
+        MODAL_CLS: 'modal', 
+        MODAL_CONTENT_CLS: 'modal-content', 
+        INNER_CONTENT_CLS: 'modal-inner', 
+        SHOW_CLS: 'show', 
+        CLOSE_CLS: 'close' 
+    });
+}
+
+function goToMenu(){
+    window.location = "index.html";
 }

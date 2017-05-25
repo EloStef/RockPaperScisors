@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="lib/leaflet1.0.0/leaflet.css" type="text/css">
     <link rel="stylesheet" type="text/css" href="lib/leaflet1.0.0/plugins/easy-button.css">
+    <link rel="stylesheet" type="text/css" href="lib/leaflet1.0.0/plugins/modal.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/jquery/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="css/routing.css" />
     <title></title>
 </head>
@@ -17,16 +19,17 @@
         <button type="button" onclick="routingSystem.redo()">REDO</button>-->
         <div id="map" class="map"></div>
         <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
-        <div id="nav">
-            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.undo()">
+        <div id="nav" width="100%">
+            <div style="width: 100px;"></div>
+            <button type="button" float="right" class="infoElement" onclick="routingSystem.undo()">
             <img src="img/undo.png"><br/>
             <label class="w3-label">Undo</label>
             </button>
-            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.redo()">
+            <button type="button" float="right" class="infoElement" onclick="routingSystem.redo()">
             <img src="img/redo.png"><br/>
             <label class="w3-label">Redo</label>
             </button>
-            <button type="button" class="infoElement" style="float: left;" onclick="routingSystem.route.saveInTemporary()">
+            <button type="button" float="right" class="infoElement" onclick="routingSystem.route.saveInTemporary()">
             <img src="img/save.png"><br/>
             <label class="w3-label">Save</label>
             </button>
@@ -36,14 +39,21 @@
     <script type="text/javascript" src="lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="lib/leaflet1.0.0/leaflet.js"></script>
     <script type="text/javascript" src="lib/leaflet1.0.0/plugins/easy-button.js"></script>
+    <script type="text/javascript" src="lib/leaflet1.0.0/plugins/Modal.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/mapElementsStyle.js"></script>
     <script type="text/javascript" src="js/Utils/Math.js"></script>
     <script type="text/javascript" src="js/map.js"></script>
     <script type="text/javascript" src="js/careTaker.js"></script>
+   <script type="text/javascript" src="js/GeoSystems/mySystem.js"></script>
+    <script type="text/javascript" src="js/GeoSystems/graphhopperSystem.js"></script>
     <script type="text/javascript" src="js/route.js"></script>
     <script type="text/javascript" src="js/routing.js"></script>
+    <script>
+    console.log(document.getElementById("map").offsetWidth);
+        document.getElementById("nav").style.width = document.getElementById("map").offsetWidth;
+    </script>
     <script type="text/javascript">
     app.initialize();
     </script>

@@ -248,6 +248,11 @@ Route.prototype = {
         this.paths = m.paths;
     },
     saveInTemporary: function() {
+        if(routingSystem.route.paths.length < 1){
+            emptyRouteDialog();
+            emptyRouteDialog();
+            return;
+        }
         localStorage.setItem("temporary", routingSystem.route.hydrate());
         window.location = "routeSave.html";
     },

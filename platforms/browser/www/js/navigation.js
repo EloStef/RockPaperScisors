@@ -1,17 +1,3 @@
-function angleFromCoordinate(latLng1, latLng2) {
-    var dLon = (latLng2.lng - latLng1.lng);
-
-    var y = Math.sin(dLon) * Math.cos(latLng2.lat);
-    var x = Math.cos(latLng1.lat) * Math.sin(latLng2.lat) - Math.sin(latLng1.lat) * Math.cos(latLng2.lat) * Math.cos(dLon);
-
-    var brng = Math.atan2(y, x);
-
-    brng = brng * (180 / Math.PI);
-    brng = (brng + 360) % 360;
-    brng = 360 - brng;
-    return Math.floor(brng);
-}
-
 function MoveDegrees(degrees) {
     while (degrees < 0 || degrees >= 360) {
         if (degrees < 0)
@@ -20,22 +6,6 @@ function MoveDegrees(degrees) {
             degrees = degrees - 360;
     }
     return degrees;
-}
-
-function rotateMap() {
-    if (bearingNow == bearingTarget || positionBefore == null)
-        return;
-    bearingNow = MoveDegrees(bearingNow);
-    var dist = bearingTarget - bearingNow;
-    if (dist < 0)
-        dist += 360;
-    if (dist > 180) {
-        bearingNow -= 1;
-        map.setBearing(bearingNow);
-    } else {
-        bearingNow += 1;
-        map.setBearing(bearingNow);
-    }
 }
 
 function rotateMap() {
@@ -55,12 +25,8 @@ function rotateMap() {
 }
 
 var NavigationSystem = function() {
-    this.state = "InitState";
     this.initAmount = 0;
-    this.route = new Route();
 
-    map.addControl(new label(id = "speedField", value = "Speed: 0"));
-    map.addControl(new label(id = "accuracyField", value = "Accuracy: 0"));
     newButton(
         '<img id="navimg" style="margin: -1px 0px 0px -5px;" src="img/navigationButtonOff.png">',
         function() {
@@ -73,6 +39,8 @@ var NavigationSystem = function() {
         'topleft',
         'navigationBtn');
 
+    mapSystem.map.addControl(new wrongDirectionImg(id = "wrongWayImg"));
+
     var lastCoords = getLastCoords();
     this.naviMarker = L.Marker.movingMarker([
         [lastCoords[0], lastCoords[1]],
@@ -84,12 +52,16 @@ var NavigationSystem = function() {
     this.bearingNow = 0.0;
     this.bearingTarget = 0.0;
 
+    this.naviPosition = new naviPosition();
+
     this.watchGeoLocation;
     this.initNavigation();
     var intervalRotateMap = window.setInterval(rotateMap, 30);
     var intervalPosMap = window.setInterval(this.setMapPos.bind(this), 100);
 
-    this.loadRoute();
+    //Jezeli ladujemy jakas droge
+    this.route = new Route(getFirstUrlArgument());
+    //this.loadRoute();
 }
 
 NavigationSystem.prototype = {
@@ -102,6 +74,9 @@ NavigationSystem.prototype = {
         this.initAmount += 1;
         this.position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
         this.naviMarker.moveTo([pos.coords.latitude, pos.coords.longitude], 1);
+        this.naviPosition.pushCoordDistanceIfHigher(
+            new L.latLng(pos.coords.latitude, pos.coords.longitude),
+            0.01);
         map.panTo(this.naviMarker._latlng);
         if (this.initAmount > 10) {
             navigator.geolocation.clearWatch(this.watchGeoLocation);
@@ -118,18 +93,18 @@ NavigationSystem.prototype = {
             map.panTo(this.naviMarker._latlng);
     },
     loadRoute: function() {
-        var routejson = localStorage.getItem(location.search.split('=')[1]);
+        var routejson = getFirstUrlArgument();
         if (routejson != null) {
             this.route.dehydrate(routejson);
-            this.route.loadOnMapForNavigation();
+            this.route.loadOnMap(false);
         }
     },
     successGeoLocate: function(pos) {
         setNavigationButtonImage("img/navigationButtonOn.png");
         if (pos.coords.speed != undefined)
-            document.getElementById("speedField").value = "Speed: " + (pos.coords.speed).toFixed(2);
+            document.getElementById("speedField").value = (pos.coords.speed).toFixed(0) + " km/h";
         if (pos.coords.accuracy != undefined)
-            document.getElementById("accuracyField").value = "Accuracy: " + pos.coords.accuracy;
+            document.getElementById("accuracyField").value = pos.coords.accuracy;
 
         if ((pos.coords.latitude == this.position.lat && pos.coords.longitude == this.position.lng))
             return;
@@ -140,21 +115,44 @@ NavigationSystem.prototype = {
         this.naviMarker.moveTo([this.position.lat, this.position.lng], 2100);
         this.naviMarker.start();
 
-        this.bearingTarget = 180 - angleFromCoordinate(this.position, this.positionBefore);
+        if(this.naviPosition.pushCoordDistanceIfHigher(
+            new L.latLng(pos.coords.latitude, pos.coords.longitude),
+            0.01)){
+                this.bearingTarget = (180 - this.naviPosition.getDirection());
+        }
+
         this.bearingTarget = MoveDegrees(this.bearingTarget);
         this.bearingNow = MoveDegrees(this.bearingNow);
 
-        setLastCoords(pos.coords.latitude, pos.coords.longitude);
+        this.isRouteDone();
+        this.wrongDirection();
 
-        this.route.loadOnMapForNavigation();
-
-        console.log(this.distance(this.position.lat, this.position.lng, 52.2318, 21.0060, "K"));
+        this.route.loadOnMapForNavigation(pos.coords.latitude, pos.coords.longitude, this.naviPosition.getDirection());
     },
     errorGeoLocate: function(error) {
+        document.getElementById("speedField").value = "-";
+        document.getElementById("accuracyField").value = "-";
+
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();
         gpsDialog();//Nie wiem czemu tu dwa były
         setNavigationButtonImage("img/navigationButtonOff.png");
+    },
+    wrongDirection: function() {
+        if(this.naviPosition.isDirectionSet()){
+            if(this.route.isDirectionCorrect()){
+                activveWrongWayImg(false);
+                return;
+            }
+        }
+        activveWrongWayImg(true);
+    },
+    isRouteDone: function() {
+        var endPoint = this.route.getLastCoords();
+        if(distance(this.position.lat, this.position.lng, endPoint[1], endPoint[0], "K") < 0.01){
+            routeDoneDialog();
+            navigator.geolocation.clearWatch(this.watchGeoLocation);
+        }
     },
     gpsDialogYes: function() {
         $(".leaflet-modal").hide();
@@ -164,18 +162,8 @@ NavigationSystem.prototype = {
         $(".leaflet-modal").hide();
         setNavigationButtonImage("img/navigationButtonOff.png");
     },
-    distance: function(lat1, lon1, lat2, lon2, unit) {
-        var radlat1 = Math.PI * lat1 / 180
-        var radlat2 = Math.PI * lat2 / 180
-        var theta = lon1 - lon2
-        var radtheta = Math.PI * theta / 180
-        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-        dist = Math.acos(dist)
-        dist = dist * 180 / Math.PI
-        dist = dist * 60 * 1.1515
-        if (unit == "K") { dist = dist * 1.609344 }
-        if (unit == "N") { dist = dist * 0.8684 }
-        return dist
+    getNavigationIconPosition: function(){
+        return this.naviMarker;
     }
 }
 
