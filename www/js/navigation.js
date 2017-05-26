@@ -39,8 +39,6 @@ var NavigationSystem = function() {
         'topleft',
         'navigationBtn');
 
-    mapSystem.map.addControl(new wrongDirectionImg(id = "wrongWayImg"));
-
     var lastCoords = getLastCoords();
     this.naviMarker = L.Marker.movingMarker([
         [lastCoords[0], lastCoords[1]],
@@ -62,6 +60,11 @@ var NavigationSystem = function() {
     //Jezeli ladujemy jakas droge
     this.route = new Route(getFirstUrlArgument());
     //this.loadRoute();
+
+    if(this.route.points.length > 1){
+        mapSystem.map.addControl(new wrongDirectionImg(id = "wrongWayImg"));
+        activveWrongWayImg(false);
+    }
 }
 
 NavigationSystem.prototype = {
@@ -124,10 +127,11 @@ NavigationSystem.prototype = {
         this.bearingTarget = MoveDegrees(this.bearingTarget);
         this.bearingNow = MoveDegrees(this.bearingNow);
 
-        this.isRouteDone();
-        this.wrongDirection();
-
-        this.route.loadOnMapForNavigation(pos.coords.latitude, pos.coords.longitude, this.naviPosition.getDirection());
+        if(this.route.points.length > 1){
+            this.isRouteDone();
+            this.wrongDirection();
+            this.route.loadOnMapForNavigation(pos.coords.latitude, pos.coords.longitude, this.naviPosition.getDirection());
+        }
     },
     errorGeoLocate: function(error) {
         document.getElementById("speedField").value = "-";
@@ -139,6 +143,8 @@ NavigationSystem.prototype = {
         setNavigationButtonImage("img/navigationButtonOff.png");
     },
     wrongDirection: function() {
+        if(this.route.points.length < 2)
+            return;
         if(this.naviPosition.isDirectionSet()){
             if(this.route.isDirectionCorrect()){
                 activveWrongWayImg(false);

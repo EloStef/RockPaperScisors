@@ -5,7 +5,8 @@ var Route = function(routeName) {
 
     if (routeName != "" && routeName != undefined) {
         this.dehydrate(localStorage.getItem(routeName));
-        this.loadOnMap(false);
+        if(this.paths.length > 0)
+            this.loadOnMap(false);
     }
 };
 
