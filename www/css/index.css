@@ -36,7 +36,7 @@ a:hover, a:active {
     font-size: 20px;
 }
 
-a:link, a:visited {
+a:link, a:visited, .temp{
     padding-bottom: 14px;
     padding-top: 14px;
     text-align: left;
@@ -46,6 +46,14 @@ a:link, a:visited {
     height: 30px;
     width: 100%;
 
+    /*border:none;border-bottom:1px solid #009688;*/
+}
+
+.radioInput {
+    color: #009688;
+    font-family: "Sans-serif";
+    margin-left: 14px;
+    font-size: 20px;
     /*border:none;border-bottom:1px solid #009688;*/
 }
 

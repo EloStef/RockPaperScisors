@@ -11,19 +11,20 @@
 
 <body>
     <div class="app">
-        <h1>Two Wheels</h1>
-        <a href="listNavigationSelector.html">
-            <div class="text">
-                Navigate
-            </div>
-        </a>
+        <!--<a href="list.html?type=N&link=routing.html">
+            <div class="text">Edit Routes</div></a>  <input type="radio" name="subject" value="created">-->
+        <temp class = "temp">
+            <div class="radioInput">Graphhopper <input onclick="SetNewSystem()" class="inputRadio" type="radio" name="subject" value="graph"></div>
+        </temp>
+        <temp class = "temp">
+            <div class="radioInput">Created for app <input onclick="SetNewSystem()" class="inputRadio" type="radio" name="subject" value="created"></div> 
+        </temp>
         <a href="listRoutingSelector.html">
-            <div class="text">
-                Routes
-            </div>
+            <div class="text">Return</div>
         </a>
     </div>
     <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/GeoSystems/systemSettings.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
     app.initialize();

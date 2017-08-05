@@ -23,7 +23,8 @@ Route.prototype = {
         this.points.push(point);
     },
     addNewPath: function(coords, instructions) {
-        for (var i = 0; i < instructions.length - 1; i++) {
+        console.log(instructions);
+        for (var i = 0; i < instructions.length; i++) {
             var road_type = "";
             if (instructions[i].annotation_text != undefined)
                 if (instructions[i].annotation_text.indexOf("cycleway") !== -1)
@@ -36,6 +37,7 @@ Route.prototype = {
                 coords.coordinates[j].road_type = road_type;
             }
         }
+        console.log(coords.coordinates.length);
         for (var i = 0; i < coords.coordinates.length; i++) {
             if (i == 0 && this.points.length > 2) {
                 coords.coordinates[i][2] =
@@ -64,6 +66,7 @@ Route.prototype = {
     loadOnMap: function(withMarks) {
         mapSystem.clearMapLayers();
         for (var i = 0; i < this.paths.length; i++) {
+            // console.log(this.paths[i]);
             mapSystem.addLinesFromGeoJson(this.paths[i]);
         }
         for (i = 0; i < this.points.length; i++) {

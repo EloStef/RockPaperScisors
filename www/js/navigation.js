@@ -60,6 +60,8 @@ var NavigationSystem = function() {
     //Jezeli ladujemy jakas droge
     this.route = new Route(getFirstUrlArgument());
     //this.loadRoute();
+    this.avspeed = -1.0;
+    this.distance = 0.0;
 
     if(this.route.points.length > 1){
         mapSystem.map.addControl(new wrongDirectionImg(id = "wrongWayImg"));
@@ -104,13 +106,22 @@ NavigationSystem.prototype = {
     },
     successGeoLocate: function(pos) {
         setNavigationButtonImage("img/navigationButtonOn.png");
-        if (pos.coords.speed != undefined)
+        if (pos.coords.speed != undefined){
             document.getElementById("speedField").value = (pos.coords.speed).toFixed(0) + " km/h";
-        if (pos.coords.accuracy != undefined)
-            document.getElementById("accuracyField").value = pos.coords.accuracy;
+            if(this.avspeed == -1.0){
+                this.avspeed = pos.coords.speed;
+            } else {
+                this.avspeed = (this.avspeed + pos.coords.speed) / 2.0;
+            }
+            document.getElementById("avSpeedField").value = (this.avspeed).toFixed(0) + " km/h";
+        }
 
         if ((pos.coords.latitude == this.position.lat && pos.coords.longitude == this.position.lng))
             return;
+
+        if(this.positionBefore && this.position)
+            this.distance += distance(this.position.lat, this.position.lng, this.positionBefore.lat, this.positionBefore.lng, "K");
+        document.getElementById("distanceField").value = (this.distance).toFixed(2) + " km";
 
         this.positionBefore = this.position;
         this.position = new L.latLng(pos.coords.latitude, pos.coords.longitude);
@@ -135,7 +146,8 @@ NavigationSystem.prototype = {
     },
     errorGeoLocate: function(error) {
         document.getElementById("speedField").value = "-";
-        document.getElementById("accuracyField").value = "-";
+        document.getElementById("avSpeedField").value = "-";
+        document.getElementById("distanceField").value = "-";
 
         navigator.geolocation.clearWatch(this.watchGeoLocation);
         gpsDialog();

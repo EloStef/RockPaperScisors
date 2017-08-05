@@ -12,5 +12,3 @@ GraphhopperSystem.prototype = {
         return this.graphhopperPrefix + this.graphhopperPointString(latlng1) + '&' + this.graphhopperPointString(latlng2) + this.graphhopperSuffix;
     },
 }
-
-graphHopperSystem = new GraphhopperSystem();
