@@ -13,26 +13,31 @@
     <title></title>
 </head>
 
+<script>
+        document.getElementById("nav").style.width = document.getElementById("map").offsetWidth;
+    </script>
+
 <body>
     <div class="app">
         <div id="map" class="map">
         </div>
         <div class="nav">
-            <div style="width: 2%"></div>
-            <div class="infoElement" style="float: left;">
+            <div>
+            <div class="infoElement" style="float: left; margin-right: 5px;">
                 <label class="w3-label">Speed</label>
                 <br/>
                 <input class="w3-input" type="text" id="speedField" value = "-">
             </div>
-            <div class="infoElement" style="float: left;">
+            <div class="infoElement" style="float: left; margin-right: 5px;">
                 <label class="w3-label">Av. Speed</label>
                 <br/>
                 <input class="w3-input" type="text" id="avSpeedField" value ="-">
             </div>
-            <div class="infoElement" style="float: left;">
+            <div class="infoElement" style="float: left; margin-right: 5px;">
                 <label class="w3-label">Distance</label>
                 <br/>
                 <input class="w3-input" type="text" id="distanceField" value ="0.00">
+            </div>
             </div>
         </div>
         <script type="text/javascript" src="lib/jquery/jquery-3.1.0.min.js"></script>

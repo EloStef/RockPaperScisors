@@ -15,7 +15,9 @@ html, body, {
 #nav {
     height: 15%;
     text-align: center;
-  display: inline-block;
+  display: flex; 
+    align-items: center;
+    justify-content: center;
 }
 
 .infoElement{

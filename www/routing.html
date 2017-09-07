@@ -13,25 +13,33 @@
     <title></title>
 </head>
 
+<script>
+        document.getElementById("nav").style.width = document.getElementById("map").offsetWidth;
+    </script>
+
 <body>
     <div class="app">
         <!--<button type="button" onclick="routingSystem.undo()">UNDO</button>
         <button type="button" onclick="routingSystem.redo()">REDO</button>-->
         <div id="map" class="map"></div>
         <!--<button type="button" onclick="saveNewRoute()">Save</button>-->
+    
         <div id="nav" width="100%">
-            <button type="button" float="left" class="infoElement" onclick="routingSystem.undo()">
-            <img src="img/undo.png"><br/>
-            <label class="w3-label">Undo</label>
-            </button>
-            <button type="button" float="left" class="infoElement" onclick="routingSystem.redo()">
-            <img src="img/redo.png"><br/>
-            <label class="w3-label">Redo</label>
-            </button>
-            <button type="button" float="left" class="infoElement" onclick="routingSystem.route.saveInTemporary()">
-            <img src="img/save.png"><br/>
-            <label class="w3-label">Save</label>
-            </button>
+                <button type="button" float="left" class="infoElement" onclick="routingSystem.undo()">
+                <img src="img/undo.png"><br/>
+                <label class="w3-label">Undo</label>
+                </button>
+
+                <button type="button" float="left" class="infoElement" onclick="routingSystem.redo()">
+                <img src="img/redo.png"><br/>
+                <label class="w3-label">Redo</label>
+                </button>
+
+                <button type="button" float="left" class="infoElement" onclick="routingSystem.route.saveInTemporary()">
+                <img src="img/save.png"><br/>
+                <label class="w3-label">Save</label>
+                </button>
+
         </div>
     </div>
     <script type="text/javascript" src="lib/jquery/jquery-3.1.0.min.js"></script>
@@ -39,9 +47,7 @@
     <script type="text/javascript" src="lib/leaflet1.0.0/leaflet.js"></script>
     <script type="text/javascript" src="lib/leaflet1.0.0/plugins/easy-button.js"></script>
     <script type="text/javascript" src="lib/leaflet1.0.0/plugins/Modal.min.js"></script>
-    <script>
-        document.getElementById("nav").style.width = document.getElementById("map").offsetWidth;
-    </script>
+    
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/mapElementsStyle.js"></script>
