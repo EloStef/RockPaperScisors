@@ -11,4 +11,17 @@ GraphhopperSystem.prototype = {
     getUrl: function(latlng1, latlng2) {
         return this.graphhopperPrefix + this.graphhopperPointString(latlng1) + '&' + this.graphhopperPointString(latlng2) + this.graphhopperSuffix;
     },
+
+    getRoute: function(routingSys, point1, clickedPoint) {
+        $.getJSON(
+                    routingSys.geoSystem.getUrl(point1, clickedPoint),
+                    function(data) {
+                        routingSys.route.addNewPoint(clickedPoint);
+                        routingSys.route.addNewPath(data.paths[0].points, data.paths[0].instructions);
+                        mapSystem.addMarker(clickedPoint, routingMarkIcon);
+                        routingSys.route.loadOnMap(true);
+                        routingSys.routeCareTaker.add(routingSys.route.hydrate());
+                    }
+                );
+    },
 }

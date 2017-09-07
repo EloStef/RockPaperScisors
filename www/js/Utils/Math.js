@@ -1,17 +1,28 @@
 var minError = 0.01;
 
+function toRadians(val){
+    return Math.PI * val / 180;
+}
+
+function toDegrees(val){
+    return val * 180 / Math.PI;
+}
+
+var nauticalMilesToStatueMiles = 1.1515;
+var minutesInDegree = 60;
+var milesToKm = 1.609344;
+
 function distance(lat1, lon1, lat2, lon2, unit) {
-        var radlat1 = Math.PI * lat1 / 180
-        var radlat2 = Math.PI * lat2 / 180
-        var theta = lon1 - lon2
-        var radtheta = Math.PI * theta / 180
-        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-        dist = Math.acos(dist)
-        dist = dist * 180 / Math.PI
-        dist = dist * 60 * 1.1515
-        if (unit == "K") { dist = dist * 1.609344 }
-        if (unit == "N") { dist = dist * 0.8684 }
-        return dist
+        var latRad1 = toRadians(lat1);
+        var latRad2 = toRadians(lat2);
+        var thetaRad = toRadians(lon1 - lon2);
+        var dist = Math.sin(latRad1) * Math.sin(latRad2) + Math.cos(latRad1) * Math.cos(latRad2) * Math.cos(thetaRad);
+        dist = Math.acos(dist);
+        dist = toDegrees(dist);
+        dist = dist * minutesInDegree * nauticalMilesToStatueMiles;
+        if (unit == "K") 
+            dist = dist * milesToKm;
+        return dist;
     }
 
 function angleFromCoordinate(latLng1, latLng2) {

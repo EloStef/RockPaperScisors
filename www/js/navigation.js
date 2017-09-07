@@ -60,7 +60,8 @@ var NavigationSystem = function() {
     //Jezeli ladujemy jakas droge
     this.route = new Route(getFirstUrlArgument());
     //this.loadRoute();
-    this.avspeed = -1.0;
+    this.avspeed = 0.0;
+    this.speedAmount = 0;
     this.distance = 0.0;
 
     if(this.route.points.length > 1){
@@ -108,12 +109,13 @@ NavigationSystem.prototype = {
         setNavigationButtonImage("img/navigationButtonOn.png");
         if (pos.coords.speed != undefined){
             document.getElementById("speedField").value = (pos.coords.speed).toFixed(0) + " km/h";
-            if(this.avspeed == -1.0){
-                this.avspeed = pos.coords.speed;
-            } else {
-                this.avspeed = (this.avspeed + pos.coords.speed) / 2.0;
+            this.avspeed += pos.coords.speed;
+            this.speedAmount += 1;
+            document.getElementById("avSpeedField").value = (this.avspeed / this.speedAmount).toFixed(0) + " km/h";
+            if(this.speedAmount > 100000){
+                this.avspeed = this.avspeed / this.speedAmount;
+                this.speedAmount = 1;
             }
-            document.getElementById("avSpeedField").value = (this.avspeed).toFixed(0) + " km/h";
         }
 
         if ((pos.coords.latitude == this.position.lat && pos.coords.longitude == this.position.lng))
